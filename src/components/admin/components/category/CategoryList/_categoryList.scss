@@ -1,0 +1,48 @@
+@use '../../../../../styles/variables' as *;
+
+.categoryList {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    .categoryTable {
+        width: 100%;
+        border-collapse: collapse;
+
+        .categoryTableHeader {
+            border-bottom: 1px solid $border-color;
+        }
+
+        .categoryTableRow {
+            border-bottom: 1px solid $border-color;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .categoryTableCell {
+                padding: 0.75rem 1rem;
+                text-align: left;
+            }
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+
+            .actionBtn {
+                border: 1px solid $border-color;
+                background: transparent;
+                color: $color-text;
+                padding: 0.35rem 0.6rem;
+                font-size: $font-size-small;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+            .actionBtn--danger {
+                color: $color-error;
+                border-color: $color-error;
+            }
+        }
+    }
+}

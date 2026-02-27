@@ -1,0 +1,27 @@
+@use '../../../styles/variables' as *;
+
+.titleContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 2rem;
+    gap: .5rem;
+    width: 100%;
+
+    .title {
+        font-family: Inter, "Inter Fallback", sans-serif;
+        font-size: clamp($font-size-small, 2.5vw, $font-size-normal);
+        color: $color-text-secondary;
+        line-height: 20px;
+        text-transform: uppercase;
+        letter-spacing: .25em;
+    }
+
+    .subTitle {
+        font-size: clamp($font-size-xxlarge, 4vw, $font-size-xxxlarge);
+        text-wrap: balance;
+        font-family: DM Serif Display, Georgia, serif;
+        max-width: 800px;
+    }
+}

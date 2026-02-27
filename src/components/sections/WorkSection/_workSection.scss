@@ -1,0 +1,22 @@
+@use '../../../styles//variables' as *;
+
+.workSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+
+    .titleContainer {
+        align-items: flex-start;
+
+        .title {
+            font-size: $font-size-normal;
+            font-size: clamp($font-size-small, 4vw, $font-size-normal);
+        }
+
+        .subTitle {
+            font-size: clamp($font-size-xlarge, 4vw, $font-size-xxlarge);
+        }
+    }
+}

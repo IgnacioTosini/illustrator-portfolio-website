@@ -1,0 +1,24 @@
+@use '../../../../../styles/variables' as *;
+
+.adminModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba($color-button, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    z-index: 1000;
+
+    .adminModal {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 100%;
+        max-width: 500px;
+        padding: 1.5rem;
+        background: $color-button-secondary;
+        border-radius: 0.75rem;
+        z-index: 1001;
+    }
+}

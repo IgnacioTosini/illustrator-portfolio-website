@@ -1,0 +1,103 @@
+@use '../../../../../styles/variables' as *;
+
+.projectCard {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.5rem;
+    overflow: hidden;
+    transition: all .3s ease-in-out;
+    text-decoration: none;
+    color: $color-text;
+
+    .projectCardImageContainer {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1rem;
+        cursor: pointer;
+
+        .projectCardImage {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform .4s ease;
+        }
+
+        /* 🔥 Gradient overlay */
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top,
+                    rgba($color-button, 0.75) 0%,
+                    rgba($color-button, 0.4) 40%,
+                    rgba($color-button, 0) 70%);
+            opacity: 0;
+            transition: opacity .4s ease;
+            z-index: 1;
+        }
+
+        .projectCardContent {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 2;
+            color: $color-hover-primary;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all .4s ease;
+        }
+
+        .projectCardOverlay {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 3;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: all .25s ease;
+        }
+
+        .overlayButton {
+            text-decoration: none;
+            border: 1px solid rgba($color-hover-primary, 0.5);
+            color: $primary-color;
+            background: rgba($color-button, 0.45);
+            padding: 0.4rem 0.7rem;
+            border-radius: 0.5rem;
+            font-size: $font-size-xsmall;
+            cursor: pointer;
+        }
+
+        .overlayButton--danger {
+            border-color: rgba($color-error, 0.6);
+            color: $color-error;
+        }
+
+        .overlayButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    &:hover .projectCardImage {
+        transform: scale(1.05);
+    }
+
+    &:hover .projectCardImageContainer::after {
+        opacity: 1;
+    }
+
+    &:hover .projectCardContent {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &:hover .projectCardOverlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

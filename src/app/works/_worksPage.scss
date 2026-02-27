@@ -1,0 +1,23 @@
+@use '../../styles/variables' as *;
+
+.worksPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 4rem;
+    padding: 1rem;
+
+    .worksContent {
+        width: 100%;
+        max-width: 1400px;
+
+        .titleContainer {
+            align-items: flex-start;
+
+            .subTitle {
+                font-size: clamp($font-size-xlarge, 4vw, $font-size-xxlarge);
+            }
+        }
+    }
+}

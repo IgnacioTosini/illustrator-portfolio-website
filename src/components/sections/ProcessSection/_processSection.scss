@@ -1,0 +1,27 @@
+@use '../../../styles/variables' as *;
+
+.processSection {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1400px;
+
+    @media (max-width: 768px) {
+        padding: 2rem;
+    }
+
+    .titleContainer {
+        align-items: flex-start;
+
+        .subTitle {
+            font-size: clamp($font-size-large, 3vw, $font-size-xxlarge);
+        }
+    }
+
+    .processCardsContainer {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}

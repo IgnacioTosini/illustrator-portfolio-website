@@ -1,0 +1,60 @@
+@use '../../../../styles/variables' as *;
+
+.processCard {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 300px;
+    padding: 1rem;
+
+    .processCardHeader {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 1rem;
+
+        .processIcon {
+            display: flex;
+            border: 1px solid rgba($border-color, 0.2);
+            border-radius: 50%;
+            padding: .5rem;
+
+            .icon {
+                width: 25px;
+                height: 25px;
+            }
+        }
+
+        p {
+            font-family: "DM Serif Display", Georgia, serif;
+            font-size: clamp($font-size-large, 3vw, $font-size-xxlarge);
+            color: $color-text-secondary;
+        }
+    }
+
+    .processCardContent {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        h3 {
+            font-size: clamp($font-size-normal, 3vw, $font-size-medium);
+            font-weight: $font-weight-medium;
+        }
+
+        p {
+            font-size: clamp($font-size-small, 2.5vw, $font-size-normal);
+            color: $color-text-secondary;
+            line-height: 23px;
+        }
+    }
+
+    &:hover .processIcon {
+        transition: all .3s ease-in-out;
+        background-color: $color-text;
+
+        .icon {
+            color: $primary-color;
+        }
+    }
+}

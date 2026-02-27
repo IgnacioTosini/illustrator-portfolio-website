@@ -1,0 +1,18 @@
+@use '../../../styles/variables' as *;
+
+.socialMedias {
+    display: flex;
+    gap: 1rem;
+
+    .icon {
+        width: 20px;
+        height: 20px;
+        color: $color-text-secondary;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+
+        &:hover {
+            color: $color-hover-secondary;
+        }
+    }
+}

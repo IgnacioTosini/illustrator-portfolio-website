@@ -1,0 +1,92 @@
+@use '../../../styles/variables' as *;
+
+.aboutSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    padding: 1rem;
+
+    .titleContainer {
+        align-items: flex-start;
+        margin-bottom: 2rem;
+
+        .subTitle {
+            font-size: clamp($font-size-large, 3vw, $font-size-xxlarge);
+        }
+    }
+
+    .aboutSectionContent {
+        display: flex;
+        gap: 4rem;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            border-radius: .5rem;
+
+                @media (max-width: 768px) {
+                    width: 100%;
+                    height: auto;
+
+                    margin-top: 2rem;
+                }
+        }
+
+        .aboutSectionText {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+
+            p {
+                font-family: Inter, "Inter Fallback", sans-serif;
+                font-size: $font-size-medium;
+                line-height: 26px;
+                font-weight: $font-weight-regular;
+                color: $color-text-secondary;
+            }
+        }
+
+        .aboutSectionAbilitiesTools {
+            display: flex;
+            justify-content: space-around;
+            gap: 2rem;
+            width: 100%;
+
+            .abilities,
+            .tools {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                h3 {
+                    font-family: Inter, "Inter Fallback", sans-serif;
+                    font-size: clamp($font-size-small, 2.5vw, $font-size-medium);
+                    color: $color-text-secondary;
+                    line-height: 20px;
+                    text-transform: uppercase;
+                    letter-spacing: .25em;
+                }
+
+                .abilitiList,
+                .toolList {
+                    display: flex;
+                    flex-direction: column;
+                    gap: .5rem;
+                    list-style: none;
+
+                    .abilitie,
+                    .tool {
+                        font-family: Inter, "Inter Fallback", sans-serif;
+                        font-size: $font-size-normal;
+                        line-height: 26px;
+                        font-weight: $font-weight-regular;
+                    }
+                }
+            }
+        }
+    }
+}
