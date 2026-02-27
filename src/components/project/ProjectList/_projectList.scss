@@ -5,5 +5,15 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
-    max-width: 1400px;
+    width: 100%;
+
+    .emptyProjects {
+        width: 100%;
+        text-align: center;
+        color: $color-text-secondary;
+        font-size: $font-size-normal;
+        padding: 2rem 1rem;
+        border: 1px solid rgba($border-color, 0.2);
+        border-radius: .75rem;
+    }
 }

@@ -20,13 +20,13 @@ export const projects: Project[] = [
         images: [
             {
                 id: "proj-1-img-1",
-                url: "https://placehold.co/800x1000",
+                url: "https://placehold.co/800x1000.png",
                 alt: "Fantasy character illustration",
                 order: 1,
             },
             {
                 id: "proj-1-img-2",
-                url: "https://placehold.co/900x800",
+                url: "https://placehold.co/900x800.png",
                 alt: "Character detail close-up",
                 order: 2,
             },
@@ -52,13 +52,13 @@ export const projects: Project[] = [
         images: [
             {
                 id: "proj-2-img-1",
-                url: "https://placehold.co/800x1000",
+                url: "https://placehold.co/800x1000.png",
                 alt: "Fantasy character illustration",
                 order: 1,
             },
             {
                 id: "proj-2-img-2",
-                url: "https://placehold.co/900x1000",
+                url: "https://placehold.co/900x1000.png",
                 alt: "Character detail close-up",
                 order: 2,
             },
@@ -84,13 +84,13 @@ export const projects: Project[] = [
         images: [
             {
                 id: "proj-3-img-1",
-                url: "https://placehold.co/800x1000",
+                url: "https://placehold.co/800x1000.png",
                 alt: "Fantasy character illustration",
                 order: 1,
             },
             {
                 id: "proj-3-img-2",
-                url: "https://placehold.co/900x1000",
+                url: "https://placehold.co/900x1000.png",
                 alt: "Character detail close-up",
                 order: 2,
             },
@@ -116,13 +116,13 @@ export const projects: Project[] = [
         images: [
             {
                 id: "proj-4-img-1",
-                url: "https://placehold.co/800x1000",
+                url: "https://placehold.co/800x1000.png",
                 alt: "Fantasy character illustration",
                 order: 1,
             },
             {
                 id: "proj-4-img-2",
-                url: "https://placehold.co/900x1000",
+                url: "https://placehold.co/900x1000.png",
                 alt: "Character detail close-up",
                 order: 2,
             },
@@ -148,13 +148,13 @@ export const projects: Project[] = [
         images: [
             {
                 id: "proj-5-img-1",
-                url: "https://placehold.co/800x1000",
+                url: "https://placehold.co/800x1000.png",
                 alt: "Fantasy character illustration",
                 order: 1,
             },
             {
                 id: "proj-5-img-2",
-                url: "https://placehold.co/900x1000",
+                url: "https://placehold.co/900x1000.png",
                 alt: "Character detail close-up",
                 order: 2,
             },
@@ -180,7 +180,7 @@ export const projects: Project[] = [
         images: [
             {
                 id: "proj-6-img-1",
-                url: "https://placehold.co/1200x800",
+                url: "https://placehold.co/1200x800.png",
                 alt: "Editorial illustration",
                 order: 1,
             },
