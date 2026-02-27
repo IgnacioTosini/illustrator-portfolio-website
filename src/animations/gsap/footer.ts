@@ -9,11 +9,14 @@ export const animateFooter = (footerElement: HTMLElement) => {
     const ctx = gsap.context(() => {
         if (prefersReducedMotion()) return;
 
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: footerElement,
-                start: "top 95%",
+                start: isMobile ? "top 120%" : "top 95%",
                 once: true,
+                invalidateOnRefresh: true,
             },
             defaults: {
                 ease: motionPreset.ease,

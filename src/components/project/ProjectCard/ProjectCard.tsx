@@ -7,9 +7,9 @@ interface Props {
   project: Project;
 }
 
-export default function AdminProjectCard({ project }: Props) {
+export default function ProjectCard({ project }: Props) {
   return (
-    <Link href={`/works/${project.slug}`} className="projectCard" >
+    <Link href={`/works/${project.slug}`} className="projectCard" scroll>
       <picture className='projectCardImageContainer'>
         {project.images?.[0].url && (
           <Image
