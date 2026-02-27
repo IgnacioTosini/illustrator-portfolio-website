@@ -4,12 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run prisma:deploy && next build",
     "start": "next start",
     "lint": "eslint",
-    "render:migrate": "node scripts/prisma-migrate-deploy-with-retry.mjs",
-    "render:build": "prisma generate && npm run render:migrate && next build",
-    "render:start": "next start"
+    "prisma:deploy": "npx prisma migrate deploy && prisma generate"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
