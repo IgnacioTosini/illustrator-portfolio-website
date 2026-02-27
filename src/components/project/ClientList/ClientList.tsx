@@ -1,6 +1,7 @@
 'use client';
 
-import { clients } from '@/mocks'
+import { useClientsQuery } from '@/hooks/client/useClientsQuery';
+import { Client } from '@/types';
 import './_clientList.scss'
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export const ClientList = ({ selectedClient, onSelectClient }: Props) => {
+    const { data: clients = [] } = useClientsQuery();
     return (
         <ul className="clientList">
             <li
@@ -18,7 +20,7 @@ export const ClientList = ({ selectedClient, onSelectClient }: Props) => {
                 Todos
             </li>
 
-            {clients.map(client => (
+            {clients.map((client: Client) => (
                 <li
                     key={client.id}
                     className={`client ${selectedClient === client.id ? "selected" : ""}`}

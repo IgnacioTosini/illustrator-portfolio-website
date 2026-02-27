@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { Title } from '@/components/ui/Title/Title';
 import { CategoryList } from '../CategoryList/CategoryList';
 import { Category } from '@/types';
@@ -14,6 +16,8 @@ interface Props {
 }
 
 export default function CategoriesClient({ categories }: Props) {
+    const router = useRouter();
+    const queryClient = useQueryClient();
     const [mode, setMode] = useState<'create' | 'edit' | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const [search, setSearch] = useState('');
@@ -49,6 +53,8 @@ export default function CategoriesClient({ categories }: Props) {
         if (mode === 'create') {
             const { ok, message, error } = await createCategory(formData);
             if (ok) {
+                await queryClient.invalidateQueries({ queryKey: ['categories'] });
+                router.refresh();
                 toast.success('Categoría creada correctamente');
                 closeModal();
             } else {
@@ -61,6 +67,8 @@ export default function CategoriesClient({ categories }: Props) {
             formData.append('id', selectedCategory.id);
             const { ok, message, error } = await updatedCategory(formData);
             if (ok) {
+                await queryClient.invalidateQueries({ queryKey: ['categories'] });
+                router.refresh();
                 toast.success('Categoría actualizada correctamente');
                 closeModal();
             } else {

@@ -8,9 +8,11 @@ import { Category, Client } from "@/types";
 import { projectFormSchema } from "@/utils/schemas/projectSchema";
 import * as yup from "yup";
 import Image from "next/image";
-import './_projectForm.scss';
 import { useCreateProjectMutation } from "@/hooks/project/useCreateProjectMutation";
 import { useUpdateProjectMutation } from "@/hooks/project/useUpdateProjectMutation";
+import { useCategoriesQuery } from "@/hooks/category/useCategoriesQuery";
+import { useClientsQuery } from "@/hooks/client/useClientsQuery";
+import './_projectForm.scss';
 
 type ProjectFormData = yup.Asserts<typeof projectFormSchema>;
 
@@ -35,6 +37,8 @@ export const ProjectForm = ({ categories, clients, mode = "create", projectId, p
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
     const [existingImages] = useState<ExistingImage[]>(initialImages);
     const [removedExistingIds, setRemovedExistingIds] = useState<string[]>([]);
+    const { data: categoriesData = categories } = useCategoriesQuery(categories);
+    const { data: clientsData = clients } = useClientsQuery(clients);
     const createMutation = useCreateProjectMutation();
     const updateMutation = useUpdateProjectMutation();
     const { register, handleSubmit, formState: { errors } } = useForm({
@@ -148,7 +152,7 @@ export const ProjectForm = ({ categories, clients, mode = "create", projectId, p
                 <label>Categoría</label>
                 <select {...register('categoryId')}>
                     <option value="">Selecciona categoría</option>
-                    {categories.map((category) => (
+                    {categoriesData.map((category) => (
                         <option key={category.id} value={category.id}>{category.name}</option>
                     ))}
                 </select>
@@ -165,7 +169,7 @@ export const ProjectForm = ({ categories, clients, mode = "create", projectId, p
                 <label>Cliente</label>
                 <select {...register('clientId')}>
                     <option value="">Selecciona cliente</option>
-                    {clients.map((client) => (
+                    {clientsData.map((client) => (
                         <option key={client.id} value={client.id}>{client.name}</option>
                     ))}
                 </select>

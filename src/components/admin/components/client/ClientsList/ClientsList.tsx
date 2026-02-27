@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { Title } from '@/components/ui/Title/Title';
 import { Client } from '@/types';
 import { AdminModal } from '../../ui/AdminModal/AdminModal';
@@ -14,6 +16,8 @@ interface Props {
 }
 
 export default function ClientsList({ clients }: Props) {
+    const router = useRouter();
+    const queryClient = useQueryClient();
     const [mode, setMode] = useState<'create' | 'edit' | null>(null);
     const [selectedClient, setSelectedClient] = useState<Client | null>(null);
     const [search, setSearch] = useState('');
@@ -49,6 +53,8 @@ export default function ClientsList({ clients }: Props) {
         if (mode === 'create') {
             const { ok, message, error } = await createClient(formData);
             if (ok) {
+                await queryClient.invalidateQueries({ queryKey: ['clients'] });
+                router.refresh();
                 toast.success('Cliente creado correctamente');
                 closeModal();
             } else {
@@ -61,6 +67,8 @@ export default function ClientsList({ clients }: Props) {
             formData.append('id', selectedClient.id);
             const { ok, message, error } = await updatedClient(formData);
             if (ok) {
+                await queryClient.invalidateQueries({ queryKey: ['clients'] });
+                router.refresh();
                 toast.success('Cliente actualizado correctamente');
                 closeModal();
             } else {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { Category } from "@/types";
 
 async function fetchCategories() {
     const res = await fetch("/api/categories", { cache: "no-store" });
@@ -8,9 +9,12 @@ async function fetchCategories() {
     return res.json();
 }
 
-export function useCategoriesQuery() {
-    return useQuery({
+export function useCategoriesQuery(initialData?: Category[]) {
+    return useQuery<Category[]>({
         queryKey: ["categories"],
         queryFn: fetchCategories,
+        initialData,
+        staleTime: 0,
+        refetchOnMount: "always",
     });
 }

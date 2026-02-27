@@ -4,6 +4,9 @@ import { mapCategory } from "@/lib/mappers/category.mapper";
 import { mapClient } from "@/lib/mappers/client.mapper";
 import './_newProjectPage.scss';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function NewProjectPage() {
   const [rawCategories, rawClients] = await Promise.all([
     prisma.category.findMany({

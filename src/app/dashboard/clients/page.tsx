@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import { mapClient } from "@/lib/mappers/client.mapper";
 import "./_client.scss";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function ClientsPage() {
     const rawClients = await prisma.client.findMany({
         orderBy: { name: "asc" },

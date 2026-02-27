@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useDeleteCategoryMutation } from '@/hooks/category/useDeleteCategoryMutation';
 import { toast } from 'react-toastify';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function DeleteCategoryButton({ id }: Props) {
+    const router = useRouter();
     const deleteMutation = useDeleteCategoryMutation();
 
     const onDelete = async () => {
@@ -16,6 +18,7 @@ export default function DeleteCategoryButton({ id }: Props) {
 
         try {
             const result = await deleteMutation.mutateAsync(id);
+            router.refresh();
             toast.success(result?.message ?? 'Categoría eliminada');
         } catch (e) {
             toast.error(e instanceof Error ? e.message : 'No se pudo eliminar.');
