@@ -27,6 +27,7 @@ export function mapProject(
         client: {
             id: prismaProject.client.id,
             name: prismaProject.client.name,
+            slug: prismaProject.client.slug,
             ...(prismaProject.client.website != null
                 ? { website: prismaProject.client.website }
                 : {}),

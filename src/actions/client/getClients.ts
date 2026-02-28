@@ -6,11 +6,9 @@ export const getClients = async (): Promise<Client[]> => {
     try {
         const clients = await prisma.client.findMany({
             include: {
-                projects: {
-                    include: {
-                        images: true,
-                        category: true,
-                        client: true,
+                _count: {
+                    select: {
+                        projects: true,
                     },
                 },
             },

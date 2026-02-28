@@ -2,6 +2,30 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
+import { toSlug } from '@/lib/utils';
+
+const getUniqueClientSlug = async (name: string, excludeClientId?: string): Promise<string> => {
+    const baseSlug = toSlug(name) || 'cliente';
+    let candidateSlug = baseSlug;
+    let suffix = 2;
+
+    while (true) {
+        const existing = await prisma.client.findFirst({
+            where: {
+                slug: candidateSlug,
+                ...(excludeClientId ? { id: { not: excludeClientId } } : {}),
+            },
+            select: { id: true },
+        });
+
+        if (!existing) {
+            return candidateSlug;
+        }
+
+        candidateSlug = `${baseSlug}-${suffix}`;
+        suffix += 1;
+    }
+};
 
 export async function createClient(formData: FormData) {
     const name = String(formData.get('name') ?? '').trim();
@@ -17,8 +41,10 @@ export async function createClient(formData: FormData) {
     }
 
     try {
+        const slug = await getUniqueClientSlug(name);
+
         await prisma.client.create({
-            data: { name, website }
+            data: { name, slug, website }
         });
 
         revalidatePath('/dashboard/clients');
@@ -44,9 +70,11 @@ export async function updatedClient(formData: FormData) {
     }
 
     try {
+        const slug = await getUniqueClientSlug(name, id);
+
         await prisma.client.update({
             where: { id },
-            data: { name, website },
+            data: { name, slug, website },
         });
 
         revalidatePath('/dashboard/clients');

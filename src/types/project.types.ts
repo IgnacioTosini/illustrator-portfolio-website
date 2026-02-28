@@ -7,7 +7,9 @@ export interface Category {
 export interface Client {
     id: string
     name: string
+    slug: string
     website?: string
+    projectsCount?: number
 }
 
 export interface Image {

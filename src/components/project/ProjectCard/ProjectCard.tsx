@@ -5,11 +5,19 @@ import './_projectCard.scss';
 
 interface Props {
   project: Project;
+  selectedClientParam?: string | null;
 }
 
-export default function ProjectCard({ project }: Props) {
+export default function ProjectCard({ project, selectedClientParam = null }: Props) {
+  const href = selectedClientParam
+    ? {
+      pathname: `/works/${project.slug}`,
+      query: { client: selectedClientParam },
+    }
+    : `/works/${project.slug}`;
+
   return (
-    <Link href={`/works/${project.slug}`} className="projectCard" scroll>
+    <Link href={href} className="projectCard" scroll>
       <picture className='projectCardImageContainer'>
         {project.images?.[0].url && (
           <Image

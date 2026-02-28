@@ -6,9 +6,10 @@ import './_projectList.scss'
 
 interface Props {
     projects: Project[];
+    selectedClientParam?: string | null;
 }
 
-export const ProjectList = ({ projects }: Props) => {
+export const ProjectList = ({ projects, selectedClientParam = null }: Props) => {
     if (projects.length === 0) {
         return (
             <div className="projectsContainer">
@@ -20,7 +21,11 @@ export const ProjectList = ({ projects }: Props) => {
     return (
         <div className="projectsContainer">
             {projects.map((project, index) => (
-                <ProjectCard key={project.slug + index} project={project} />
+                <ProjectCard
+                    key={project.slug + index}
+                    project={project}
+                    selectedClientParam={selectedClientParam}
+                />
             ))}
         </div>
     );

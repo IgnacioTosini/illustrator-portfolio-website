@@ -9,6 +9,29 @@ import { toSlug } from "@/lib/utils";
 import { deleteProjectImagesFromCloudinary, uploadImages } from "@/lib/services";
 import { randomUUID } from "node:crypto";
 
+const getUniqueClientSlugInTx = async (
+    tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+    name: string,
+): Promise<string> => {
+    const baseSlug = toSlug(name) || 'cliente';
+    let candidateSlug = baseSlug;
+    let suffix = 2;
+
+    while (true) {
+        const existing = await tx.client.findUnique({
+            where: { slug: candidateSlug },
+            select: { id: true },
+        });
+
+        if (!existing) {
+            return candidateSlug;
+        }
+
+        candidateSlug = `${baseSlug}-${suffix}`;
+        suffix += 1;
+    }
+};
+
 export const updateProject = async (id: string, updatedData: ProjectUpdateInput): Promise<Project> => {
     const project = await prisma.project.findFirst({
         where: { id },
@@ -93,7 +116,12 @@ export const addProject = async (projectData: ProjectCreateInput): Promise<Proje
                 ? validatedData.clientId
                 : newClientName
                     ? (await tx.client.findFirst({ where: { name: newClientName } })
-                        ?? await tx.client.create({ data: { name: newClientName } })).id
+                        ?? await tx.client.create({
+                            data: {
+                                name: newClientName,
+                                slug: await getUniqueClientSlugInTx(tx, newClientName),
+                            }
+                        })).id
                     : undefined;
 
             if (!categoryId || !clientId) {

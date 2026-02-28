@@ -8,6 +8,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alukkart.com";
 
 interface Props {
     params: Promise<{ slug: string }>
+    searchParams: Promise<{ client?: string | string[] }>
 }
 
 export async function generateMetadata(
@@ -44,8 +45,10 @@ export async function generateMetadata(
     }
 }
 
-export default async function WorkPage({ params }: Props) {
+export default async function WorkPage({ params, searchParams }: Props) {
     const { slug } = await params;
+    const { client } = await searchParams;
+    const selectedClientParam = typeof client === 'string' ? client : null;
     const project = await getProjectBySlug(slug)
 
     if (!project) {
@@ -54,7 +57,7 @@ export default async function WorkPage({ params }: Props) {
 
     return (
         <div className="workPage">
-            <ProjectGallery project={project} />
+            <ProjectGallery project={project} selectedClientParam={selectedClientParam} />
         </div>
     );
 }

@@ -13,9 +13,10 @@ import './_projectGallery.scss';
 
 interface Props {
     project: Project;
+    selectedClientParam?: string | null;
 }
 
-export default function ProjectGallery({ project }: Props) {
+export default function ProjectGallery({ project, selectedClientParam = null }: Props) {
     const [mainImage, setMainImage] = useState(project.images[0]);
     const workPageRef = useRef<HTMLDivElement | null>(null);
     const imageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -82,6 +83,13 @@ export default function ProjectGallery({ project }: Props) {
         { scope: workPageRef }
     );
 
+    const backHref = selectedClientParam
+        ? {
+            pathname: '/works',
+            query: { client: selectedClientParam },
+        }
+        : '/works';
+
     return (
         <div ref={workPageRef} className="projectGallery">
             <div ref={imageContainerRef} className="imageContainer">
@@ -94,7 +102,7 @@ export default function ProjectGallery({ project }: Props) {
             </div>
 
             <div className="workPageContainer">
-                <Link href="/works" className="backButton">
+                <Link href={backHref} className="backButton">
                     <IoArrowBack /> Volver a Trabajos
                 </Link>
 

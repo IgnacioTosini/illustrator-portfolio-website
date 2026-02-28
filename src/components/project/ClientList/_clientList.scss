@@ -1,28 +1,61 @@
 @use '../../../styles/variables' as *;
 
+.clientListWrapper {
+    position: relative;
+    width: 100%;
+
+    &.is-scrollable::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 2.8rem;
+        height: 100%;
+        background: linear-gradient(to right, rgba($primary-color, 0), rgba($primary-color, 0.9) 70%);
+        pointer-events: none;
+    }
+}
+
 .clientList {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     list-style: none;
     margin: 2rem 2rem 2rem 0;
+    padding-right: 2.5rem;
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     white-space: nowrap;
+    scroll-snap-type: x proximity;
 
     .client {
         flex: 0 0 auto;
-        padding: .5rem;
+        padding: .6rem .75rem;
+        min-height: 2.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
         background-color: $color-button-secondary;
         border: 1px solid rgba($border-color, 0.2);
         cursor: pointer;
         transition: border-color .3s ease-in-out;
+        scroll-snap-align: start;
 
         &:hover {
             border-color: $color-hover-secondary;
+        }
+
+        &.disabled {
+            opacity: .65;
+            cursor: not-allowed;
+            border-style: dashed;
+
+            &:hover {
+                border-color: rgba($border-color, 0.2);
+            }
         }
     }
 
@@ -30,4 +63,20 @@
         background-color: $color-button;
         color: $primary-color;
     }
+}
+
+.clientListHint {
+    position: absolute;
+    right: .75rem;
+    bottom: -.6rem;
+    font-size: $font-size-small;
+    color: $color-text-secondary;
+    background-color: rgba($primary-color, 0.9);
+    padding: .15rem .4rem;
+    pointer-events: none;
+}
+
+.clientStatus {
+    font-size: $font-size-xsmall;
+    color: $color-text-secondary;
 }

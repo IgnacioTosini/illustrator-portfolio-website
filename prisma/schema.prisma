@@ -54,6 +54,7 @@ model Category {
 model Client {
   id       String    @id @default(cuid())
   name     String
+  slug     String    @unique
   website  String?
   projects Project[]
 }
