@@ -9,6 +9,7 @@ import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alukkart.com";
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+const defaultSocialImage = `${siteUrl}/alukkart.webp`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -35,11 +36,20 @@ export const metadata: Metadata = {
     siteName: "Alukkart",
     title: "Alukkart - Portafolio de Ilustración",
     description: "Portafolio de ilustración de Alukkart con proyectos de diseño de personajes, ilustración editorial y narrativa visual.",
+    images: [
+      {
+        url: defaultSocialImage,
+        width: 750,
+        height: 750,
+        alt: "Alukkart - Portafolio de Ilustración",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Alukkart - Portafolio de Ilustración",
     description: "Portafolio de ilustración de Alukkart con proyectos de diseño de personajes, ilustración editorial y narrativa visual.",
+    images: [defaultSocialImage],
   },
   robots: {
     index: true,
