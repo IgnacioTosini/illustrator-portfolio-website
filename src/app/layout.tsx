@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import AppShell from "@/components/layout/AppShell/AppShell";
 import { inter } from "@/config/fonts";
+import { getSiteUrl } from "@/lib/utils";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Providers from "@/providers/Providers";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alukkart.com";
+const siteUrl = getSiteUrl();
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 const defaultSocialImage = `${siteUrl}/alukkart.webp`;
 

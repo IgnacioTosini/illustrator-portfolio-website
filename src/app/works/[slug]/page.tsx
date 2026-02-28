@@ -2,9 +2,10 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProjectGallery from "@/components/project/ProjectGallery/ProjectGallery";
 import { getProjectBySlug } from "@/actions/project/getProjectBySlug";
+import { getSiteUrl } from "@/lib/utils";
 import './_workPage.scss';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alukkart.com";
+const siteUrl = getSiteUrl();
 
 interface Props {
     params: Promise<{ slug: string }>
