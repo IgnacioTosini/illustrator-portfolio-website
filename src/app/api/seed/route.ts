@@ -61,10 +61,12 @@ export async function POST(request: Request) {
 				create: {
 					id: client.id,
 					name: client.name,
+					slug: client.slug,
 					website: client.website,
 				},
 				update: {
 					name: client.name,
+					slug: client.slug,
 					website: client.website,
 				},
 			});

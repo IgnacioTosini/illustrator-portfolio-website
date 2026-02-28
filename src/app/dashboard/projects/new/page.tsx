@@ -15,7 +15,7 @@ export default async function NewProjectPage() {
     }),
     prisma.client.findMany({
       orderBy: { name: "asc" },
-      select: { id: true, name: true, website: true },
+      select: { id: true, name: true, website: true, slug: true },
     }),
   ]);
 

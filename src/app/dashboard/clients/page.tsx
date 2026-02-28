@@ -9,7 +9,7 @@ export const revalidate = 0;
 export default async function ClientsPage() {
     const rawClients = await prisma.client.findMany({
         orderBy: { name: "asc" },
-        select: { id: true, name: true, website: true },
+        select: { id: true, name: true, website: true, slug: true },
     });
 
     const clients = rawClients.map(mapClient);
