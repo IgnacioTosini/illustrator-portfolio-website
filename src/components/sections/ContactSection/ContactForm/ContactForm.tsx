@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form"
 import { LuSend } from "react-icons/lu";
 import { toast } from "react-toastify";
+import { trackEvent } from "@/lib/utils";
 import './_contactForm.scss'
 
 type Inputs = {
@@ -35,6 +36,11 @@ export const ContactForm = () => {
             if (!res.ok || !result.ok) {
                 throw new Error(result.error || 'Error al enviar')
             }
+
+            trackEvent('form_submit', {
+                form_name: 'contact_form',
+                location: 'contact_section',
+            })
 
             toast.success('Mensaje enviado correctamente ✅')
         } catch {
