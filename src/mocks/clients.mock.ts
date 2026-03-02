@@ -3,14 +3,12 @@ import { Client } from "@/types/project.types"
 export const clients: Client[] = [
     {
         id: "client-1",
-        name: "Indie Studio",
-        slug: "indie-studio",
-        website: "https://indiestudio.com"
+        name: "v_maravilla",
+        slug: "v-maravilla"
     },
     {
         id: "client-2",
-        name: "Creative Agency",
-        slug: "creative-agency",
-        website: "https://creativeagency.com"
+        name: "planetsifillis",
+        slug: "planetsifillis"
     }
 ]

@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 export const metadata: Metadata = {
     title: "Trabajos",
-    description: "Todos los trabajos de ilustración de Alukkart: proyectos recientes, editoriales y diseño de personajes.",
+    description: "Portfolio of comic character illustration projects by Lucas R. (alukkart): character design, concept art and fan art.",
     alternates: {
         canonical: "/works",
     },

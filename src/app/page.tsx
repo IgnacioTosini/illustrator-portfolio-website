@@ -10,8 +10,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: "Alukkart - Ilustrador Freelance",
-  description: "Explora el portafolio de Alukkart: diseño de personajes, ilustración editorial y narrativa visual para marcas y editoriales.",
+  title: "Alukkart - Comic Character Illustration",
+  description: "I will design and make an illustration of your comic character. Professional comic illustrator from Argentina with 5.0 reviews on Fiverr.",
   alternates: {
     canonical: "/",
   },

@@ -5,13 +5,16 @@ import { useGSAP } from "@gsap/react";
 import { usePathname } from "next/navigation";
 import { Links } from '@/components/ui/Links/Links';
 import { SocialMedias } from '@/components/ui/SocialMedias/SocialMedias';
-import { links } from '@/utils/links';
+import { getLinksByLocale } from '@/utils/links';
 import { animateFooter } from '@/animations/gsap/footer';
+import { useLanguage } from "@/providers/LanguageProvider";
 import './_footer.scss';
 
 export default function Footer() {
   const footerRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
+  const { locale, t } = useLanguage();
+  const links = getLinksByLocale(locale);
 
   useGSAP(
     () => {
@@ -29,7 +32,8 @@ export default function Footer() {
 
       <div className='footerLinks'>
         <Links links={links} />
-        <p>© {new Date().getFullYear()} Alukkart. Todos los derechos reservados.</p>
+        <p>© {new Date().getFullYear()} Alukkart. {t("footer.rightsReserved")}</p>
+        <p>{t("footer.createdBy")}</p>
       </div>
 
         <SocialMedias />

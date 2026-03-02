@@ -6,6 +6,7 @@ import { Project } from '@/types';
 import { Title } from '@/components/ui/Title/Title';
 import { ProjectList } from '@/components/project/ProjectList/ProjectList';
 import { animateWorkSection } from '@/animations/gsap/workSection';
+import { useLanguage } from "@/providers/LanguageProvider";
 import './_workSection.scss';
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 
 export default function WorkSection({ projects }: Props) {
   const workRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useLanguage();
 
   useGSAP(
     () => {
@@ -25,7 +27,7 @@ export default function WorkSection({ projects }: Props) {
 
   return (
     <div ref={workRef} className='workSection' id="works">
-      <Title title={"Trabajos Seleccionados"} subTitle={"Proyectos Recientes"} />
+      <Title title={t("workSection.title")} subTitle={t("workSection.subtitle")} />
       <ProjectList projects={projects} />
     </div>
   )

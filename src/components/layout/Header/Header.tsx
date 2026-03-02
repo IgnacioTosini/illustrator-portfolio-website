@@ -1,49 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { usePathname, useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import { links } from "@/utils/links";
+import { getLinksByLocale } from "@/utils/links";
 import { animateHeader } from "@/animations/gsap/header";
 import { prefersReducedMotion } from "@/animations/gsap/reducedMotion";
 import { Links } from "@/components/ui/Links/Links";
+import { useLanguage } from "@/providers/LanguageProvider";
+import { ThemeSelector } from "./ThemeSelector";
+import { LanguageSelector } from "./LanguageSelector";
 import Link from "next/link";
 import "./_header.scss";
 
 export default function Header() {
     const headerRef = useRef<HTMLDivElement | null>(null);
-    const themeMenuRef = useRef<HTMLDivElement | null>(null);
     const pathname = usePathname();
     const router = useRouter();
-    const { theme, resolvedTheme, setTheme } = useTheme();
-    const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
-    const selectedTheme = theme ?? "system";
-
-    const themeLabel =
-        selectedTheme === "light"
-            ? "Claro"
-            : selectedTheme === "dark"
-                ? "Oscuro"
-                : "Sistema";
-
-    useEffect(() => {
-        if (!isThemeMenuOpen) return;
-
-        const handleClickOutside = (event: MouseEvent) => {
-            if (!themeMenuRef.current) return;
-            if (!themeMenuRef.current.contains(event.target as Node)) {
-                setIsThemeMenuOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [isThemeMenuOpen]);
+    const { locale } = useLanguage();
+    const links = getLinksByLocale(locale);
 
     const runTopMicroAnimation = () => {
         if (prefersReducedMotion()) return;
@@ -112,60 +88,8 @@ export default function Header() {
             <Link href='/' className="header-link name" onClick={handleGoTop}>Alukkart</Link>
             <div className="header-actions">
                 <Links links={links} />
-                <div className="theme-menu" ref={themeMenuRef}>
-                    <button
-                        type="button"
-                        className="theme-toggle"
-                        onClick={() => setIsThemeMenuOpen((prev) => !prev)}
-                        aria-label="Abrir selector de tema"
-                        title="Cambiar tema"
-                        aria-expanded={isThemeMenuOpen}
-                    >
-                        <span suppressHydrationWarning>{resolvedTheme === "dark" ? "🌙" : "☀️"}</span>
-                        <span suppressHydrationWarning className="theme-toggle-label">{themeLabel}</span>
-                    </button>
-
-                    {isThemeMenuOpen ? (
-                        <div className="theme-dropdown" role="menu" aria-label="Selector de tema">
-                            <button
-                                type="button"
-                                role="menuitemradio"
-                                aria-checked={selectedTheme === "light"}
-                                className={`theme-option ${selectedTheme === "light" ? "is-active" : ""}`}
-                                onClick={() => {
-                                    setTheme("light");
-                                    setIsThemeMenuOpen(false);
-                                }}
-                            >
-                                Claro
-                            </button>
-                            <button
-                                type="button"
-                                role="menuitemradio"
-                                aria-checked={selectedTheme === "dark"}
-                                className={`theme-option ${selectedTheme === "dark" ? "is-active" : ""}`}
-                                onClick={() => {
-                                    setTheme("dark");
-                                    setIsThemeMenuOpen(false);
-                                }}
-                            >
-                                Oscuro
-                            </button>
-                            <button
-                                type="button"
-                                role="menuitemradio"
-                                aria-checked={selectedTheme === "system"}
-                                className={`theme-option ${selectedTheme === "system" ? "is-active" : ""}`}
-                                onClick={() => {
-                                    setTheme("system");
-                                    setIsThemeMenuOpen(false);
-                                }}
-                            >
-                                Sistema
-                            </button>
-                        </div>
-                    ) : null}
-                </div>
+                <LanguageSelector />
+                <ThemeSelector />
             </div>
         </div>
     )

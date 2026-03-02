@@ -6,6 +6,7 @@ import { Title } from "@/components";
 import WorksClient from "@/components/WorksClient/WorksClient";
 import { Project } from "@/types";
 import { animateWorksPage } from "@/animations/gsap/worksPage";
+import { useLanguage } from "@/providers/LanguageProvider";
 
 interface Props {
     projects: Project[];
@@ -13,6 +14,7 @@ interface Props {
 
 export default function WorksPageClient({ projects }: Props) {
     const worksRef = useRef<HTMLDivElement | null>(null);
+    const { t } = useLanguage();
 
     useGSAP(
         () => {
@@ -24,7 +26,7 @@ export default function WorksPageClient({ projects }: Props) {
 
     return (
         <div ref={worksRef} className="worksContent">
-            <Title headingLevel={1} title="Portafolio" subTitle="Todos los Trabajos" />
+            <Title headingLevel={1} title={t("worksPage.title")} subTitle={t("worksPage.subtitle")} />
             <WorksClient projects={projects} />
         </div>
     );

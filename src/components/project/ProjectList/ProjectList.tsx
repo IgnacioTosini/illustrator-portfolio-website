@@ -2,6 +2,7 @@
 
 import ProjectCard from '../ProjectCard/ProjectCard'
 import { Project } from '@/types';
+import { useLanguage } from "@/providers/LanguageProvider";
 import './_projectList.scss'
 
 interface Props {
@@ -10,10 +11,12 @@ interface Props {
 }
 
 export const ProjectList = ({ projects, selectedClientParam = null }: Props) => {
+    const { t } = useLanguage();
+
     if (projects.length === 0) {
         return (
             <div className="projectsContainer">
-                <p className="emptyProjects">No hay proyectos para mostrar por ahora.</p>
+                <p className="emptyProjects">{t("works.emptyProjects")}</p>
             </div>
         );
     }

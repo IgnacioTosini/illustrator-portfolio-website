@@ -7,6 +7,7 @@ import { useClientsQuery } from '@/hooks/client/useClientsQuery';
 import { motionPreset } from '@/animations/gsap/motionPreset';
 import { prefersReducedMotion } from '@/animations/gsap/reducedMotion';
 import { Client } from '@/types';
+import { useLanguage } from "@/providers/LanguageProvider";
 import './_clientList.scss';
 
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 
 export const ClientList = ({ selectedClient, onSelectClient }: Props) => {
     const { data: clients = [] } = useClientsQuery();
+    const { t } = useLanguage();
     const sortedClients = [...clients].sort((a, b) => {
         const aHasNoProjects = a.projectsCount === 0;
         const bHasNoProjects = b.projectsCount === 0;
@@ -123,7 +125,7 @@ export const ClientList = ({ selectedClient, onSelectClient }: Props) => {
                         onSelectClient(null);
                     }}
                 >
-                    Todos
+                    {t("works.allClients")}
                 </li>
 
                 {sortedClients.map((client: Client) => {
@@ -144,7 +146,7 @@ export const ClientList = ({ selectedClient, onSelectClient }: Props) => {
                             }}
                         >
                             <span>{client.name}</span>
-                            {hasNoProjects && <span className="clientStatus">Sin proyectos</span>}
+                            {hasNoProjects && <span className="clientStatus">{t("works.clientNoProjects")}</span>}
                         </li>
                     );
                 })}
@@ -152,7 +154,7 @@ export const ClientList = ({ selectedClient, onSelectClient }: Props) => {
 
             {showHint && isScrollable && (
                 <span className="clientListHint" aria-hidden="true">
-                    Deslizá para ver más →
+                    {t("works.swipeHint")}
                 </span>
             )}
         </div>

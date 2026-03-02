@@ -3,8 +3,8 @@ import { Category } from "@/types/project.types"
 export const categories: Category[] = [
     {
         id: "cat-1",
-        name: "Editorial",
-        slug: "editorial"
+        name: "Comic & Cartoon",
+        slug: "comic-cartoon"
     },
     {
         id: "cat-2",
@@ -13,12 +13,12 @@ export const categories: Category[] = [
     },
     {
         id: "cat-3",
-        name: "Branding",
-        slug: "branding"
+        name: "Concept Art",
+        slug: "concept-art"
     },
     {
         id: "cat-4",
-        name: "Personal Work",
-        slug: "personal-work"
+        name: "Fan Art",
+        slug: "fan-art"
     }
 ]

@@ -5,6 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Project } from "@/types";
 import { ClientList } from "@/components/project/ClientList/ClientList";
 import { ProjectList } from "@/components/project/ProjectList/ProjectList";
+import { useLanguage } from "@/providers/LanguageProvider";
+import { getMessage } from "@/i18n/messages";
 import './_worksClient.scss'
 
 interface Props {
@@ -15,6 +17,7 @@ export default function WorksClient({ projects }: Props) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const { locale } = useLanguage();
 
     const clientsBySlug = useMemo(
         () => new Map(projects.flatMap((project) => (project.client?.slug ? [[project.client.slug, project.client]] : []))),
@@ -50,13 +53,17 @@ export default function WorksClient({ projects }: Props) {
         ? projects.filter(project => project.client?.slug === selectedClient)
         : projects;
 
+    const totalProjectsLabel = filteredProjects.length === 1
+        ? getMessage(locale, "works.projectSingular")
+        : getMessage(locale, "works.projectPlural");
+
     return (
         <div className="worksClient">
             <ClientList
                 selectedClient={selectedClient}
                 onSelectClient={handleSelectClient}
             />
-            <span className="totalProjects">{filteredProjects.length} {filteredProjects.length === 1 ? 'proyecto' : 'proyectos'}</span>
+            <span className="totalProjects">{filteredProjects.length} {totalProjectsLabel}</span>
             <ProjectList
                 projects={filteredProjects}
                 selectedClientParam={selectedClient}

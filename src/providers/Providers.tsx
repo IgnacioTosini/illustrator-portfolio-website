@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { ThemeProvider } from "next-themes";
+import { LanguageProvider } from "@/providers/LanguageProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     const [queryClient] = React.useState(
@@ -45,30 +46,34 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
     if (!persister) {
         return (
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-            </ThemeProvider>
+            <LanguageProvider>
+                <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+                </ThemeProvider>
+            </LanguageProvider>
         );
     }
 
     return (
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <PersistQueryClientProvider
-                client={queryClient}
-                persistOptions={{
-                    persister,
-                    maxAge: 1000 * 60 * 60 * 24,
-                    buster: "v1",
-                    dehydrateOptions: {
-                        shouldDehydrateQuery: (query) => {
-                            const key = query.queryKey[0];
-                            return key === "projects" || key === "project" || key === "categories" || key === "clients";
+        <LanguageProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                <PersistQueryClientProvider
+                    client={queryClient}
+                    persistOptions={{
+                        persister,
+                        maxAge: 1000 * 60 * 60 * 24,
+                        buster: "v1",
+                        dehydrateOptions: {
+                            shouldDehydrateQuery: (query) => {
+                                const key = query.queryKey[0];
+                                return key === "projects" || key === "project" || key === "categories" || key === "clients";
+                            },
                         },
-                    },
-                }}
-            >
-                {children}
-            </PersistQueryClientProvider>
-        </ThemeProvider>
+                    }}
+                >
+                    {children}
+                </PersistQueryClientProvider>
+            </ThemeProvider>
+        </LanguageProvider>
     );
 }

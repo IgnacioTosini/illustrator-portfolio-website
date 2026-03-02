@@ -7,10 +7,12 @@ import { SocialMedias } from '@/components/ui/SocialMedias/SocialMedias'
 import { ContactForm } from './ContactForm/ContactForm'
 import { animateContactSection } from '@/animations/gsap/contactSection'
 import { trackEvent } from '@/lib/utils'
+import { useLanguage } from "@/providers/LanguageProvider";
 import './_contactSection.scss'
 
 export default function ContactSection() {
   const contactRef = useRef<HTMLDivElement | null>(null)
+  const { t } = useLanguage();
 
   useGSAP(
     () => {
@@ -22,9 +24,9 @@ export default function ContactSection() {
 
   return (
     <div ref={contactRef} className='contactSection' id={'contact'}>
-      <Title title={'Contacto'} subTitle={'Trabajemos juntos'} />
+      <Title title={t("contact.title")} subTitle={t("contact.subtitle")} />
       <div className='moreInfoContent'>
-        <p>Tienes un proyecto en mente? Siempre estoy abierto a nuevos encargos, colaboraciones y alianzas creativas. Hagamos algo hermoso.</p>
+        <p>{t("contact.description")}</p>
         <div className='personalData'>
           <a
             href="mailto:hello@alukkart.com"

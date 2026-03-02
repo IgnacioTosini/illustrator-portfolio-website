@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { LuSend } from "react-icons/lu";
 import { toast } from "react-toastify";
 import { trackEvent } from "@/lib/utils";
+import { useLanguage } from "@/providers/LanguageProvider";
 import './_contactForm.scss'
 
 type Inputs = {
@@ -14,6 +15,8 @@ type Inputs = {
 }
 
 export const ContactForm = () => {
+    const { t } = useLanguage();
+
     const {
         register,
         handleSubmit,
@@ -34,7 +37,7 @@ export const ContactForm = () => {
             const result = await res.json()
 
             if (!res.ok || !result.ok) {
-                throw new Error(result.error || 'Error al enviar')
+                throw new Error(result.error || t("contactForm.sendErrorFallback"))
             }
 
             trackEvent('form_submit', {
@@ -42,9 +45,9 @@ export const ContactForm = () => {
                 location: 'contact_section',
             })
 
-            toast.success('Mensaje enviado correctamente ✅')
+            toast.success(t("contactForm.successToast"))
         } catch {
-            toast.error('No se pudo enviar el mensaje')
+            toast.error(t("contactForm.errorToast"))
         } finally {
             setSending(false)
         }
@@ -53,40 +56,40 @@ export const ContactForm = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="contactForm">
             <div className="field">
-                <label>NOMBRE</label>
+                <label>{t("contactForm.nameLabel")}</label>
                 <input
-                    {...register("name", { required: "El nombre es requerido" })}
-                    placeholder="Tu nombre"
+                    {...register("name", { required: t("contactForm.nameRequired") })}
+                    placeholder={t("contactForm.namePlaceholder")}
                 />
                 {errors.name && <span className="error">{errors.name.message}</span>}
             </div>
 
             <div className="field">
-                <label>CORREO</label>
+                <label>{t("contactForm.emailLabel")}</label>
                 <input
                     {...register("email", {
-                        required: "El email es requerido",
+                        required: t("contactForm.emailRequired"),
                         pattern: {
                             value: /^\S+@\S+$/i,
-                            message: "Email inválido"
+                            message: t("contactForm.emailInvalid")
                         }
                     })}
-                    placeholder="tu@correo.com"
+                    placeholder={t("contactForm.emailPlaceholder")}
                 />
                 {errors.email && <span className="error">{errors.email.message}</span>}
             </div>
 
             <div className="field">
-                <label>MENSAJE</label>
+                <label>{t("contactForm.messageLabel")}</label>
                 <textarea
-                    {...register("message", { required: "El mensaje es requerido" })}
-                    placeholder="Cuentame sobre tu proyecto..."
+                    {...register("message", { required: t("contactForm.messageRequired") })}
+                    placeholder={t("contactForm.messagePlaceholder")}
                 />
                 {errors.message && <span className="error">{errors.message.message}</span>}
             </div>
 
             <button type="submit" disabled={sending}>
-                <span>{sending ? 'Enviando...' : 'Enviar Mensaje'}</span>
+                <span>{sending ? t("contactForm.sending") : t("contactForm.submit")}</span>
                 <LuSend className='icon' />
             </button>
         </form>

@@ -6,11 +6,13 @@ import Image from "next/image";
 import { IoMdArrowRoundDown } from "react-icons/io";
 import { Title } from "@/components/ui/Title/Title";
 import { animateHeroSection } from "@/animations/gsap/heroSection";
+import { useLanguage } from "@/providers/LanguageProvider";
 import Link from "next/link";
 import './_heroSection.scss';
 
 export default function HeroSection() {
   const heroRef = useRef<HTMLDivElement | null>(null);
+  const { t } = useLanguage();
 
   useGSAP(
     () => {
@@ -26,10 +28,10 @@ export default function HeroSection() {
         <Image src={'/alukkart.webp'} alt="Alukkart" width={550} height={500} />
       </div>
 
-      <Title headingLevel={1} title={"Ilustrador Freelance"} subTitle={"Diseno de personajes, ilustracion editorial y narrativa visual."} />
+      <Title headingLevel={1} title={t("hero.title")} subTitle={t("hero.subtitle")} />
       <div className="heroSectionButton">
         <Link href={'/#works'} className="viewButton">
-          <span>Ver Trabajos</span> <IoMdArrowRoundDown />
+          <span>{t("hero.ctaViewWorks")}</span> <IoMdArrowRoundDown />
         </Link>
       </div>
     </div>
