@@ -36,7 +36,7 @@ export function LanguageSelector() {
                 title={t("header.changeLanguage")}
                 aria-expanded={isLanguageMenuOpen}
             >
-                <span className="theme-toggle-label">{languageLabel}</span>
+                <span className="theme-toggle-label language-toggle-label">{languageLabel}</span>
             </button>
 
             {isLanguageMenuOpen ? (
