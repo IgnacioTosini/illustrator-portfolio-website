@@ -1,15 +1,24 @@
-$primary-color: #F1F0EC;
+$primary-color: var(--color-bg);
 
-$color-button: #0D0D0F;
-$color-button-secondary: #F9F8F7;
-$border-color: #646464;
+$color-button: var(--color-button);
+$color-button-secondary: var(--color-button-secondary);
+$border-color: var(--color-border);
 
 //Color text
-$color-text: #0D0D0F;
-$color-text-secondary: #626369;
+$color-text: var(--color-text);
+$color-text-secondary: var(--color-text-secondary);
 
-$color-hover-primary: #ffffff;
-$color-hover-secondary: #030303;
+$color-hover-primary: var(--color-hover-primary);
+$color-hover-secondary: var(--color-hover-secondary);
+
+$primary-color-rgb: var(--color-bg-rgb);
+$color-button-rgb: var(--color-button-rgb);
+$color-button-secondary-rgb: var(--color-button-secondary-rgb);
+$border-color-rgb: var(--color-border-rgb);
+$color-text-rgb: var(--color-text-rgb);
+$color-text-secondary-rgb: var(--color-text-secondary-rgb);
+$color-hover-primary-rgb: var(--color-hover-primary-rgb);
+$color-hover-secondary-rgb: var(--color-hover-secondary-rgb);
 
 $font-family: 'Inter', sans-serif;
 
@@ -30,6 +39,9 @@ $font-weight-extra-bold: 800;
 
 $color-error: #ff4d4f;
 $color-success: #52c41a;
+
+$color-error-rgb: 255, 77, 79;
+$color-success-rgb: 82, 196, 26;
 
 $color-instagram: #B453E6;
 $color-whatsapp: #25D366;

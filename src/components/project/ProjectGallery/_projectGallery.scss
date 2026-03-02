@@ -108,7 +108,7 @@
             transition: transform .25s ease, border-color .25s ease, opacity .25s ease;
 
             &:hover {
-                border-color: rgba($border-color, 0.6);
+                border-color: rgba($border-color-rgb, 0.6);
                 transform: translateY(-2px);
             }
 

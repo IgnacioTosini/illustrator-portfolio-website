@@ -6,11 +6,55 @@
 }
 
 :root {
+  --color-bg: #F1F0EC;
+  --color-button: #0D0D0F;
+  --color-button-secondary: #F9F8F7;
+  --color-border: #646464;
+  --color-text: #0D0D0F;
+  --color-text-secondary: #626369;
+  --color-hover-primary: #ffffff;
+  --color-hover-secondary: #030303;
+
+  --color-bg-rgb: 241, 240, 236;
+  --color-button-rgb: 13, 13, 15;
+  --color-button-secondary-rgb: 249, 248, 247;
+  --color-border-rgb: 100, 100, 100;
+  --color-text-rgb: 13, 13, 15;
+  --color-text-secondary-rgb: 98, 99, 105;
+  --color-hover-primary-rgb: 255, 255, 255;
+  --color-hover-secondary-rgb: 3, 3, 3;
+
   --anchor-offset: 7rem;
+}
+
+.dark {
+  --color-bg: #121214;
+  --color-button: #f5f5f5;
+  --color-button-secondary: #1a1a1f;
+  --color-border: #4b4d53;
+  --color-text: #f5f5f5;
+  --color-text-secondary: #b7bac2;
+  --color-hover-primary: #0d0d0f;
+  --color-hover-secondary: #ffffff;
+
+  --color-bg-rgb: 18, 18, 20;
+  --color-button-rgb: 245, 245, 245;
+  --color-button-secondary-rgb: 26, 26, 31;
+  --color-border-rgb: 75, 77, 83;
+  --color-text-rgb: 245, 245, 245;
+  --color-text-secondary-rgb: 183, 186, 194;
+  --color-hover-primary-rgb: 13, 13, 15;
+  --color-hover-secondary-rgb: 255, 255, 255;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 

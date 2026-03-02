@@ -30,9 +30,9 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(to top,
-                    rgba($color-button, 0.75) 0%,
-                    rgba($color-button, 0.4) 40%,
-                    rgba($color-button, 0) 70%);
+                    rgba($color-button-rgb, 0.75) 0%,
+                    rgba($color-button-rgb, 0.4) 40%,
+                    rgba($color-button-rgb, 0) 70%);
             opacity: 0;
             transition: opacity .4s ease;
             z-index: 1;
@@ -63,9 +63,9 @@
 
         .overlayButton {
             text-decoration: none;
-            border: 1px solid rgba($color-hover-primary, 0.5);
+            border: 1px solid rgba($color-hover-primary-rgb, 0.5);
             color: $primary-color;
-            background: rgba($color-button, 0.45);
+            background: rgba($color-button-rgb, 0.45);
             padding: 0.4rem 0.7rem;
             border-radius: 0.5rem;
             font-size: $font-size-xsmall;
@@ -73,7 +73,7 @@
         }
 
         .overlayButton--danger {
-            border-color: rgba($color-error, 0.6);
+            border-color: rgba($color-error-rgb, 0.6);
             color: $color-error;
         }
 

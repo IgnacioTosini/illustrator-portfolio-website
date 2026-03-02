@@ -21,7 +21,7 @@
     .skeletonText {
         display: block;
         border-radius: .5rem;
-        background-color: rgba($border-color, 0.2);
+        background-color: rgba($border-color-rgb, 0.2);
         animation: skeletonPulse 1.4s ease-in-out infinite;
     }
 
