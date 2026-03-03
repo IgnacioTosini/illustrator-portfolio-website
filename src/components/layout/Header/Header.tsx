@@ -9,7 +9,7 @@ import { animateHeader } from "@/animations/gsap/header";
 import { prefersReducedMotion } from "@/animations/gsap/reducedMotion";
 import { Links } from "@/components/ui/Links/Links";
 import { useLanguage } from "@/providers/LanguageProvider";
-import { ThemeSelector } from "./ThemeSelector";
+import { ThemeSelector } from "../../ui/ThemeSelector/ThemeSelector";
 import { LanguageSelector } from "./LanguageSelector";
 import Link from "next/link";
 import "./_header.scss";

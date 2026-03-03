@@ -13,6 +13,7 @@ import { useUpdateProjectMutation } from "@/hooks/project/useUpdateProjectMutati
 import { useCategoriesQuery } from "@/hooks/category/useCategoriesQuery";
 import { useClientsQuery } from "@/hooks/client/useClientsQuery";
 import './_projectForm.scss';
+import { toast } from 'react-toastify';
 
 type ProjectFormData = yup.Asserts<typeof projectFormSchema>;
 
@@ -95,18 +96,20 @@ export const ProjectForm = ({ categories, clients, mode = "create", projectId, p
                         keptExistingImageIds: visibleExistingImages.map((i) => i.id),
                     },
                 });
+                toast.success('Proyecto actualizado exitosamente');
             } else {
                 await createMutation.mutateAsync(projectData as Record<string, unknown>);
+                toast.success('Proyecto creado exitosamente');
             }
 
             router.push('/dashboard/projects');
         } catch (error) {
             console.error('Error al guardar proyecto:', error);
+            toast.error('Error al guardar proyecto');
         }
     };
 
     const isSubmitting = createMutation.isPending || updateMutation.isPending;
-
 
     const removeExistingImage = (id: string) => {
         setRemovedExistingIds((prev) => [...prev, id]);

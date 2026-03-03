@@ -10,8 +10,9 @@ export async function PUT(
         const body = await req.json();
         const data = await updateProject(id, body);
         return NextResponse.json(data, { status: 200 });
-    } catch {
-        return NextResponse.json({ message: "Error al actualizar proyecto" }, { status: 500 });
+    } catch (error) {
+        const message = error instanceof Error ? error.message : "Error al actualizar proyecto";
+        return NextResponse.json({ message }, { status: 500 });
     }
 }
 
@@ -24,7 +25,8 @@ export async function DELETE(
         console.log("Deleting project with id:", id);
         await deleteProjectById(id);
         return NextResponse.json({ ok: true }, { status: 200 });
-    } catch {
-        return NextResponse.json({ message: "Error al eliminar proyecto" }, { status: 500 });
+    } catch (error) {
+        const message = error instanceof Error ? error.message : "Error al eliminar proyecto";
+        return NextResponse.json({ message }, { status: 500 });
     }
 }

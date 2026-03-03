@@ -27,7 +27,7 @@ export const createProjectSchema = yup.object({
     newCategoryName: yup.string().defined().default(''),
     newClientName: yup.string().defined().default(''),
 
-    images: yup.array().of(imageSchema).optional().default([])
+    images: yup.array().of(imageSchema).min(1, 'Debe agregar al menos una imagen').optional().default([])
 }).test(
     'category-existing-or-new',
     'Selecciona una categoría existente o agrega una nueva',

@@ -18,7 +18,10 @@ export function useUpdateProjectMutation() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
-            if (!res.ok) throw new Error("No se pudo actualizar el proyecto");
+            if (!res.ok) {
+                const data = await res.json().catch(() => null) as { message?: string } | null;
+                throw new Error(data?.message || "No se pudo actualizar el proyecto");
+            }
             return res.json();
         },
         onSuccess: (_data, variables) => {

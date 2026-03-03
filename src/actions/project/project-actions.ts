@@ -32,6 +32,72 @@ const getUniqueClientSlugInTx = async (
     }
 };
 
+const resolveCategoryIdInTx = async (
+    tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+    categoryIdInput?: string,
+    newCategoryNameInput?: string,
+): Promise<string | undefined> => {
+    const categoryId = categoryIdInput?.trim();
+    const newCategoryName = newCategoryNameInput?.trim();
+
+    if (newCategoryName) {
+        const slug = toSlug(newCategoryName);
+        return (await tx.category.upsert({
+            where: { slug },
+            update: {},
+            create: {
+                name: newCategoryName,
+                slug,
+            },
+        })).id;
+    }
+
+    if (!categoryId) return undefined;
+
+    const existingCategory = await tx.category.findUnique({
+        where: { id: categoryId },
+        select: { id: true },
+    });
+
+    if (!existingCategory) {
+        throw new Error('La categoría seleccionada no existe');
+    }
+
+    return existingCategory.id;
+};
+
+const resolveClientIdInTx = async (
+    tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+    clientIdInput?: string,
+    newClientNameInput?: string,
+): Promise<string | undefined> => {
+    const clientId = clientIdInput?.trim();
+    const newClientName = newClientNameInput?.trim();
+
+    if (newClientName) {
+        return (await tx.client.findFirst({ where: { name: newClientName } })
+            ?? await tx.client.create({
+                data: {
+                    name: newClientName,
+                    slug: await getUniqueClientSlugInTx(tx, newClientName),
+                }
+            })).id;
+    }
+
+    if (!clientId) return undefined;
+
+    const existingClient = await tx.client.findUnique({
+        where: { id: clientId },
+        select: { id: true },
+    });
+
+    if (!existingClient) {
+        throw new Error('El cliente seleccionado no existe');
+    }
+
+    return existingClient.id;
+};
+
 export const updateProject = async (id: string, updatedData: ProjectUpdateInput): Promise<Project> => {
     const project = await prisma.project.findFirst({
         where: { id },
@@ -50,6 +116,13 @@ export const updateProject = async (id: string, updatedData: ProjectUpdateInput)
     }
 
     const keepSet = new Set(updatedData.keptExistingImageIds ?? []);
+    const keptExistingImages = project.images.filter((img) => keepSet.has(img.id));
+    const newImages = updatedData.images ?? [];
+
+    if (keptExistingImages.length + newImages.length === 0) {
+        throw new Error('El proyecto debe tener al menos una imagen');
+    }
+
     const imagesToDelete = project.images.filter((img) => !keepSet.has(img.id));
 
     if (imagesToDelete.length > 0) {
@@ -58,29 +131,38 @@ export const updateProject = async (id: string, updatedData: ProjectUpdateInput)
 
     const uploadedImages = await uploadImages(updatedData.images ?? []);
 
-    const updatedProject = await prisma.project.update({
-        where: { id },
-        data: {
-            title: updatedData.title,
-            slug: updatedData.slug,
-            description: updatedData.description,
-            year: updatedData.year,
-            featured: updatedData.featured,
-            category: { connect: { id: updatedData.categoryId } },
-            client: { connect: { id: updatedData.clientId } },
-            images: {
-                deleteMany: {
-                    id: { in: imagesToDelete.map((img) => img.id) },
+    const updatedProject = await prisma.$transaction(async (tx) => {
+        const categoryId = await resolveCategoryIdInTx(tx, updatedData.categoryId, updatedData.newCategoryName);
+        const clientId = await resolveClientIdInTx(tx, updatedData.clientId, updatedData.newClientName);
+
+        if (!categoryId || !clientId) {
+            throw new Error('Categoría y cliente son obligatorios');
+        }
+
+        return tx.project.update({
+            where: { id },
+            data: {
+                title: updatedData.title,
+                slug: updatedData.slug,
+                description: updatedData.description,
+                year: updatedData.year,
+                featured: updatedData.featured,
+                categoryId,
+                clientId,
+                images: {
+                    deleteMany: {
+                        id: { in: imagesToDelete.map((img) => img.id) },
+                    },
+                    create: uploadedImages.map((image) => ({
+                        id: randomUUID(),
+                        url: image.url,
+                        order: image.order,
+                        alt: image.alt ?? undefined,
+                    })),
                 },
-                create: uploadedImages.map((image) => ({
-                    id: randomUUID(),
-                    url: image.url,
-                    order: image.order,
-                    alt: image.alt ?? undefined,
-                })),
             },
-        },
-        include: { images: true, category: true, client: true },
+            include: { images: true, category: true, client: true },
+        });
     });
     revalidatePath('/dashboard/projects')
     return mapProject(updatedProject);
@@ -93,36 +175,14 @@ export const addProject = async (projectData: ProjectCreateInput): Promise<Proje
             stripUnknown: true
         });
 
+        if (!validatedData.images || validatedData.images.length === 0) {
+            throw new Error('El proyecto debe tener al menos una imagen');
+        }
         const uploadedImages = await uploadImages(validatedData.images ?? []);
 
         const project = await prisma.$transaction(async (tx) => {
-            const newCategoryName = validatedData.newCategoryName?.trim();
-            const newClientName = validatedData.newClientName?.trim();
-
-            const categoryId = validatedData.categoryId?.trim()
-                ? validatedData.categoryId
-                : newCategoryName
-                    ? (await tx.category.upsert({
-                        where: { slug: toSlug(newCategoryName) },
-                        update: {},
-                        create: {
-                            name: newCategoryName,
-                            slug: toSlug(newCategoryName),
-                        },
-                    })).id
-                    : undefined;
-
-            const clientId = validatedData.clientId?.trim()
-                ? validatedData.clientId
-                : newClientName
-                    ? (await tx.client.findFirst({ where: { name: newClientName } })
-                        ?? await tx.client.create({
-                            data: {
-                                name: newClientName,
-                                slug: await getUniqueClientSlugInTx(tx, newClientName),
-                            }
-                        })).id
-                    : undefined;
+            const categoryId = await resolveCategoryIdInTx(tx, validatedData.categoryId, validatedData.newCategoryName);
+            const clientId = await resolveClientIdInTx(tx, validatedData.clientId, validatedData.newClientName);
 
             if (!categoryId || !clientId) {
                 throw new Error('Categoría y cliente son obligatorios');

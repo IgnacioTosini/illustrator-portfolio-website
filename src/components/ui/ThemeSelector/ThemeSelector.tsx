@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/providers/LanguageProvider";
+import "./_themeSelector.scss";
 
 export function ThemeSelector() {
     const themeMenuRef = useRef<HTMLDivElement | null>(null);
