@@ -4,8 +4,9 @@ import AppShell from "@/components/layout/AppShell/AppShell";
 import { inter } from "@/config/fonts";
 import { getSiteUrl } from "@/lib/utils";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import Providers from "@/providers/Providers";
+import { Analytics } from "@vercel/analytics/next";
+import 'react-toastify/dist/ReactToastify.css';
 import "./globals.css";
 
 const siteUrl = getSiteUrl();
@@ -99,6 +100,7 @@ export default function RootLayout({
         <Providers>
           <AppShell>{children}</AppShell>
           <ToastContainer position="top-right" autoClose={2500} />
+          <Analytics />
         </Providers>
       </body>
     </html>
