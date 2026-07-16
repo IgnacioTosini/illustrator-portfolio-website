@@ -10,14 +10,21 @@ export const getProjects = async (): Promise<Project[]> => {
             include: {
                 client: true,
                 category: true,
-                images: true,
+                images: {
+                    orderBy: {
+                        order: 'asc',
+                    },
+                },
+            },
+            orderBy: {
+                updatedAt: 'desc',
             },
         });
 
         return projects.map(mapProject);
     } catch (error) {
-        console.log(error)
-        throw new Error('Error al obtener proyectos')
+        console.error('Error al obtener proyectos', error)
+        return []
     }
 }
 
@@ -30,7 +37,11 @@ export const getFeaturedProjects = async (take?: number): Promise<Project[]> => 
             include: {
                 client: true,
                 category: true,
-                images: true,
+                images: {
+                    orderBy: {
+                        order: 'asc',
+                    },
+                },
             },
             orderBy: {
                 updatedAt: 'desc',
@@ -40,7 +51,7 @@ export const getFeaturedProjects = async (take?: number): Promise<Project[]> => 
 
         return projects.map(mapProject);
     } catch (error) {
-        console.log(error)
-        throw new Error('Error al obtener proyectos destacados')
+        console.error('Error al obtener proyectos destacados', error)
+        return []
     }
 }

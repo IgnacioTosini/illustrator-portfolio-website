@@ -1,21 +1,50 @@
 @use '../../../styles/variables' as *;
 
 .heroSection {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    width: 100%;
+    min-height: clamp(620px, calc(100svh - 74px), 860px);
+    padding: clamp(2rem, 6vw, 5rem) 1.5rem 3.5rem;
+    isolation: isolate;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 7% auto auto 50%;
+        width: min(720px, 88vw);
+        aspect-ratio: 1;
+        border: 1px solid rgba($color-text-rgb, 0.08);
+        border-radius: 50%;
+        transform: translateX(-50%);
+        z-index: -1;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: auto auto 11% 50%;
+        width: min(520px, 72vw);
+        height: 1px;
+        background: linear-gradient(90deg, rgba($color-text-rgb, 0), rgba($color-accent-rgb, .5), rgba($color-text-rgb, 0));
+        transform: translateX(-50%);
+        z-index: -1;
+    }
 
     .heroImageReveal {
         overflow: hidden;
-        border-radius: 1rem;
+        border-radius: .75rem;
+        box-shadow: 0 22px 70px rgba(0, 0, 0, 0.16);
     }
 
     img {
         display: block;
-        border-radius: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.295);
+        width: min(550px, 86vw);
+        height: auto;
+        border-radius: .75rem;
         transition: transform 0.3s ease-in-out;
 
         &:hover {
@@ -23,30 +52,58 @@
         }
 
         @media (max-width: 768px) {
-            width: 100%;
-            height: auto;
+            width: min(100%, 520px);
         }
+    }
+
+    .titleContainer {
+        margin-top: 1.5rem;
+
+        .title {
+            color: $color-accent;
+        }
+
+        .subTitle {
+            max-width: 920px;
+            line-height: .96;
+        }
+    }
+
+    .heroProof {
+        max-width: 720px;
+        margin-top: 1rem;
+        color: $color-text-secondary;
+        font-size: clamp($font-size-small, 2vw, $font-size-medium);
+        line-height: 1.6;
+        text-align: center;
     }
 
     .heroSectionButton {
         margin-top: 2rem;
-        display: flex;
-        flex-direction: column;
+        display: inline-flex;
+        flex-direction: row;
+        flex-wrap: wrap;
         align-items: center;
-        gap: .5rem;
+        justify-content: center;
+        gap: .75rem;
 
-        .viewButton {
+        .viewButton,
+        .contactButton {
             display: flex;
             align-items: center;
             gap: .5rem;
-            background-color: $color-button;
-            color: $primary-color;
             border: 1px solid $border-color;
             padding: 0.75rem 1.5rem;
             font-size: $font-size-medium;
             cursor: pointer;
             transition: all .3s ease-in-out;
             text-decoration: none;
+            min-height: 48px;
+        }
+
+        .viewButton {
+            background-color: $color-button;
+            color: $primary-color;
 
             &:hover {
                 background-color: $color-hover-primary;
@@ -54,5 +111,23 @@
                 border-color: $border-color;
             }
         }
+
+        .contactButton {
+            background-color: rgba($color-button-secondary-rgb, .7);
+            color: $color-text;
+            border-color: rgba($border-color-rgb, .25);
+
+            &:hover {
+                border-color: $color-accent;
+                color: $color-accent;
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .heroSection img,
+    .heroSection .viewButton {
+        transition: none;
     }
 }

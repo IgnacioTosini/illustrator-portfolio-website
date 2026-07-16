@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import AppShell from "@/components/layout/AppShell/AppShell";
-import { inter } from "@/config/fonts";
 import { getSiteUrl } from "@/lib/utils";
 import { ToastContainer } from "react-toastify";
 import Providers from "@/providers/Providers";
@@ -71,7 +70,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable}`}>
+      <body suppressHydrationWarning>
         {gtmId ? (
           <Script id="google-tag-manager" strategy="afterInteractive">
             {`

@@ -3,60 +3,134 @@
 .header {
     position: sticky;
     top: 0;
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr);
     align-items: center;
-    flex-wrap: wrap;
     width: 100%;
-    padding: 1rem 2rem;
-    gap: 4rem;
-    background-color: $primary-color;
+    padding: .85rem clamp(1rem, 4vw, 2.5rem);
+    gap: clamp(1rem, 3vw, 2.5rem);
+    background-color: rgba($primary-color-rgb, 0.88);
+    border-bottom: 1px solid rgba($color-text-secondary-rgb, 0.12);
+    backdrop-filter: blur(18px);
     z-index: 1000;
 
-    .header-links {
-        display: flex;
-        gap: 2rem;
+    .header-nav {
+        justify-self: center;
+        min-width: 0;
+        max-width: 100%;
     }
 
     .header-actions {
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-
-        .header-link {
-            position: relative;
-            text-decoration: none;
-            color: $color-text-secondary;
-            text-align: center;
-
-            &::after {
-                content: "";
-                position: absolute;
-                left: 0;
-                top: 100%;
-                width: 100%;
-                height: 1px;
-                background-color: $color-hover-secondary;
-
-                transform: scaleX(0);
-                transform-origin: left;
-                transition: transform 0.4s ease;
-            }
-
-            &:hover::after {
-                transform: scaleX(1);
-            }
-        }
+        gap: .6rem;
+        justify-self: end;
+        min-width: 0;
     }
 
     .name {
+        justify-self: start;
         font-family: "DM Serif Display", Georgia, serif;
         font-weight: $font-weight-bold;
         font-size: $font-size-large;
         color: $color-text;
         line-height: 32px;
         text-decoration: none;
+        transition: color .25s ease;
+
+        &::first-letter {
+            color: $color-accent;
+        }
+
+        &:hover {
+            color: $color-accent;
+        }
+    }
+
+    .header-links {
+        gap: clamp(1rem, 2vw, 1.8rem);
+        padding: .35rem .6rem;
+        border: 1px solid rgba($border-color-rgb, .12);
+        border-radius: 999px;
+        background-color: rgba($color-button-secondary-rgb, .42);
+
+        .link {
+            font-size: $font-size-normal;
+            line-height: 1;
+            padding: .35rem 0;
+        }
+    }
+
+    .header-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.25rem;
+        padding: 0 .85rem;
+        border: 1px solid rgba($color-accent-rgb, .45);
+        border-radius: 999px;
+        background-color: rgba($color-accent-rgb, .08);
+        color: $color-text;
+        text-decoration: none;
+        font-size: $font-size-small;
+        font-weight: $font-weight-medium;
+        white-space: nowrap;
+        transition: background-color .25s ease, border-color .25s ease, color .25s ease, transform .25s ease;
+
+        &:hover {
+            transform: translateY(-1px);
+            border-color: $color-accent;
+            background-color: rgba($color-accent-rgb, .14);
+            color: $color-accent;
+        }
+    }
+}
+
+@media (max-width: 980px) {
+    .header {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "brand actions"
+            "nav nav";
+        gap: .75rem 1rem;
+
+        .name {
+            grid-area: brand;
+        }
+
+        .header-actions {
+            grid-area: actions;
+        }
+
+        .header-nav {
+            grid-area: nav;
+            justify-self: stretch;
+            overflow: hidden;
+        }
+
+        .header-links {
+            justify-content: flex-start;
+            overflow-x: auto;
+            scrollbar-width: none;
+            white-space: nowrap;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+}
+
+@media (max-width: 560px) {
+    .header {
+        .header-cta {
+            padding-inline: .7rem;
+        }
+
+        .header-links {
+            gap: 1rem;
+            padding-inline: .7rem;
+        }
     }
 }

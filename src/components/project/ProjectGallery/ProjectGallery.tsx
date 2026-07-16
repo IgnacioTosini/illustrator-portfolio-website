@@ -9,6 +9,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { Project } from "@/types";
 import { animateWorkPage } from "@/animations/gsap/workPage";
 import { prefersReducedMotion } from "@/animations/gsap/reducedMotion";
+import { useLanguage } from "@/providers/LanguageProvider";
 import './_projectGallery.scss';
 
 interface Props {
@@ -21,6 +22,7 @@ export default function ProjectGallery({ project, selectedClientParam = null }: 
     const workPageRef = useRef<HTMLDivElement | null>(null);
     const imageContainerRef = useRef<HTMLDivElement | null>(null);
     const hasMountedRef = useRef(false);
+    const { t } = useLanguage();
 
     useEffect(() => {
         if (!hasMountedRef.current) {
@@ -97,29 +99,39 @@ export default function ProjectGallery({ project, selectedClientParam = null }: 
                     src={mainImage.url}
                     alt={mainImage.alt || project.title}
                     fill
+                    sizes="100vw"
                     className="projectImage"
                 />
             </div>
 
             <div className="workPageContainer">
                 <Link href={backHref} className="backButton">
-                    <IoArrowBack /> Volver a Trabajos
+                    <IoArrowBack /> {t("projectDetail.back")}
                 </Link>
 
                 <div className="projectData">
-                    <div className="projectDataSidebar">
-                        <span>{project.year}</span>
-                        <span>{project.client?.name}</span>
-                    </div>
-
                     <div className="projectDataHeader">
                         <h1>{project.title}</h1>
-                        <p className="client">{project.category.name}</p>
                         <p className="description">{project.description}</p>
                     </div>
+
+                    <dl className="projectMeta">
+                        <div>
+                            <dt>{t("projectDetail.year")}</dt>
+                            <dd>{project.year}</dd>
+                        </div>
+                        <div>
+                            <dt>{t("projectDetail.client")}</dt>
+                            <dd>{project.client?.name || "Personal"}</dd>
+                        </div>
+                        <div>
+                            <dt>{t("projectDetail.category")}</dt>
+                            <dd>{project.category.name}</dd>
+                        </div>
+                    </dl>
                 </div>
 
-                <div className="imagesList">
+                <div className="imagesList" aria-label={t("projectDetail.gallery")}>
                     {project.images.map(image => (
                         <Image
                             key={image.id}
@@ -127,6 +139,7 @@ export default function ProjectGallery({ project, selectedClientParam = null }: 
                             alt={image.alt || project.title}
                             width={400}
                             height={300}
+                            sizes="(max-width: 768px) 92vw, 400px"
                             className={`projectCardImage ${mainImage.id === image.id ? "active" : ""}`}
                             onClick={() => handleSelectImage(image)}
                         />

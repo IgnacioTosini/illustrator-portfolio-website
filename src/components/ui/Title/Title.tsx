@@ -1,5 +1,4 @@
 import './_title.scss';
-
 interface Props {
     title: string;
     subTitle: string;

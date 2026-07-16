@@ -1,10 +1,13 @@
 @use '../../../styles/variables' as *;
 
 .processSection {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    max-width: 1400px;
+    width: 100%;
+    max-width: 1180px;
+    padding: 4rem 1.5rem;
 
     @media (max-width: 768px) {
         padding: 2rem;
@@ -19,8 +22,26 @@
     }
 
     .processCardsContainer {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+        gap: 1rem;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 2.65rem;
+            left: 1.25rem;
+            right: 1.25rem;
+            height: 1px;
+            background: linear-gradient(90deg, rgba($color-accent-rgb, .48), rgba($border-color-rgb, .2), rgba($color-accent-rgb, .2));
+            z-index: -1;
+        }
+    }
+}
+
+@media (max-width: 720px) {
+    .processSection .processCardsContainer::before {
+        display: none;
     }
 }

@@ -4,8 +4,12 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    max-width: 300px;
-    padding: 1rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid rgba($border-color-rgb, 0.18);
+    border-radius: .75rem;
+    background-color: rgba($primary-color-rgb, 0.92);
+    transition: transform .3s ease, border-color .3s ease, background-color .3s ease;
 
     .processCardHeader {
         display: flex;
@@ -18,6 +22,7 @@
             border: 1px solid rgba($border-color-rgb, 0.2);
             border-radius: 50%;
             padding: .5rem;
+            background-color: $primary-color;
 
             .icon {
                 width: 25px;
@@ -28,7 +33,7 @@
         p {
             font-family: "DM Serif Display", Georgia, serif;
             font-size: clamp($font-size-large, 3vw, $font-size-xxlarge);
-            color: $color-text-secondary;
+            color: $color-accent;
         }
     }
 
@@ -56,5 +61,11 @@
         .icon {
             color: $primary-color;
         }
+    }
+
+    &:hover {
+        transform: translateY(-3px);
+        border-color: rgba($border-color-rgb, 0.34);
+        background-color: rgba($color-button-secondary-rgb, 0.55);
     }
 }

@@ -62,7 +62,7 @@ export const animateWorkPage = (workPageElement: HTMLElement) => {
                 },
             )
             .from(
-                ".projectDataSidebar span",
+                ".projectMeta div",
                 {
                     autoAlpha: 0,
                     y: 12,
@@ -72,7 +72,7 @@ export const animateWorkPage = (workPageElement: HTMLElement) => {
                 "-=0.2"
             )
             .from(
-                ".projectDataHeader h1, .projectDataHeader .client, .projectDataHeader .description",
+                ".projectDataHeader h1, .projectDataHeader .description",
                 {
                     autoAlpha: 0,
                     y: 22,

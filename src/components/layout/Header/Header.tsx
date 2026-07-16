@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,8 +18,10 @@ export default function Header() {
     const headerRef = useRef<HTMLDivElement | null>(null);
     const pathname = usePathname();
     const router = useRouter();
-    const { locale } = useLanguage();
+    const { locale, t } = useLanguage();
     const links = getLinksByLocale(locale);
+    const [activeSectionLink, setActiveSectionLink] = useState<string | null>(null);
+    const activeLink = pathname === "/" ? activeSectionLink : pathname === "/works" ? "/works" : null;
 
     const runTopMicroAnimation = () => {
         if (prefersReducedMotion()) return;
@@ -62,13 +64,13 @@ export default function Header() {
         event.preventDefault();
 
         if (pathname === "/") {
-            window.history.replaceState(null, "", "/#top");
+            window.history.replaceState(null, "", "/");
             window.scrollTo({ top: 0, behavior: "smooth" });
             runTopMicroAnimation();
             return;
         }
 
-        router.push("/#top");
+        router.push("/");
         window.setTimeout(() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
             runTopMicroAnimation();
@@ -83,11 +85,51 @@ export default function Header() {
         { scope: headerRef, dependencies: [], revertOnUpdate: true }
     );
 
+    useEffect(() => {
+        if (pathname !== "/") {
+            return;
+        }
+
+        const sectionIds = ["works", "about", "process", "contact"];
+        const sections = sectionIds
+            .map((id) => document.getElementById(id))
+            .filter((section): section is HTMLElement => Boolean(section));
+
+        if (sections.length === 0) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visibleEntry = entries
+                    .filter((entry) => entry.isIntersecting)
+                    .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+                if (!visibleEntry) return;
+
+                setActiveSectionLink(visibleEntry.target.id === "works" ? "/works" : `/#${visibleEntry.target.id}`);
+            },
+            {
+                rootMargin: "-32% 0px -52% 0px",
+                threshold: [0.1, 0.25, 0.5],
+            }
+        );
+
+        sections.forEach((section) => observer.observe(section));
+
+        return () => observer.disconnect();
+    }, [pathname]);
+
     return (
         <div ref={headerRef} className="header">
             <Link href='/' className="header-link name" onClick={handleGoTop}>Alukkart</Link>
+            <nav className="header-nav" aria-label="Principal">
+                <Links links={links} activeLink={activeLink} className="header-links" />
+            </nav>
             <div className="header-actions">
-                <Links links={links} />
+                <Link href="/#contact" className="header-cta">
+                    {t("header.ctaContact")}
+                </Link>
                 <LanguageSelector />
                 <ThemeSelector />
             </div>

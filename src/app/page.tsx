@@ -6,8 +6,7 @@ import ProcessSection from "@/components/sections/ProcessSection/ProcessSection"
 import WorkSection from "@/components/sections/WorkSection/WorkSection"
 import { getFeaturedProjects } from "@/actions/project/getProjects"
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Alukkart - Comic Character Illustration",

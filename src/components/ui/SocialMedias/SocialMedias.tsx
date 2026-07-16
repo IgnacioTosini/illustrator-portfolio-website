@@ -5,10 +5,12 @@ import './_socialMedias.scss'
 export const SocialMedias = () => {
     return (
         <div className='socialMedias'>
-            <a href="https://www.instagram.com/alukkart/" target='_blank'>
-            <CiInstagram className='icon' />
+            <a href="https://www.instagram.com/alukkart/" target='_blank' rel="noreferrer" aria-label="Instagram">
+                <CiInstagram className='icon' />
             </a>
-            <FaBehance className='icon' />
+            <a href="https://www.behance.net/alukkart" target='_blank' rel="noreferrer" aria-label="Behance">
+                <FaBehance className='icon' />
+            </a>
         </div>
     )
 }

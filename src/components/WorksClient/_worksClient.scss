@@ -1,5 +1,14 @@
 @use '../../styles/variables' as *;
 
+.worksClient {
+    margin-top: 1.5rem;
+}
+
 .totalProjects {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    margin-bottom: 1rem;
     font-size: $font-size-normal;
+    color: $color-text-secondary;
 }

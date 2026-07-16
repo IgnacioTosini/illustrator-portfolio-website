@@ -6,9 +6,10 @@ import './_projectCard.scss';
 interface Props {
   project: Project;
   selectedClientParam?: string | null;
+  priority?: boolean;
 }
 
-export default function ProjectCard({ project, selectedClientParam = null }: Props) {
+export default function ProjectCard({ project, selectedClientParam = null, priority = false }: Props) {
   const href = selectedClientParam
     ? {
       pathname: `/works/${project.slug}`,
@@ -18,13 +19,15 @@ export default function ProjectCard({ project, selectedClientParam = null }: Pro
 
   return (
     <Link href={href} className="projectCard" scroll>
-      <picture className='projectCardImageContainer'>
+      <div className='projectCardImageContainer'>
         {project.images?.[0].url && (
           <Image
             src={project.images[0].url}
             alt={project.images[0].alt || project.title}
             width={400}
             height={400}
+            sizes="(max-width: 640px) 92vw, (max-width: 1200px) 45vw, 400px"
+            priority={priority}
             className='projectCardImage'
           />
         )}
@@ -32,7 +35,7 @@ export default function ProjectCard({ project, selectedClientParam = null }: Pro
           <h3>{project.title}</h3>
           <p>{project.client?.name || 'Personal'}</p>
         </div>
-      </picture>
+      </div>
       <h3>{project.title}</h3>
       <p>{project.client?.name || 'Personal'}</p>
     </Link>

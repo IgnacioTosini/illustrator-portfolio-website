@@ -27,6 +27,15 @@
         &:hover::after {
             transform: scaleX(1);
         }
+
+        &.is-active {
+            color: $color-text;
+
+            &::after {
+                background-color: $color-accent;
+                transform: scaleX(1);
+            }
+        }
     }
 
 }

@@ -67,6 +67,7 @@ export default function WorksClient({ projects }: Props) {
             <ProjectList
                 projects={filteredProjects}
                 selectedClientParam={selectedClient}
+                priorityImages
             />
         </div>
     );

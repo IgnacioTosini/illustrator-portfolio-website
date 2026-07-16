@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { Title } from "@/components";
@@ -27,7 +28,10 @@ export default function WorksPageClient({ projects }: Props) {
     return (
         <div ref={worksRef} className="worksContent">
             <Title headingLevel={1} title={t("worksPage.title")} subTitle={t("worksPage.subtitle")} />
-            <WorksClient projects={projects} />
+            <p className="worksIntro">{t("worksPage.intro")}</p>
+            <Suspense fallback={<span className="totalProjects">...</span>}>
+                <WorksClient projects={projects} />
+            </Suspense>
         </div>
     );
 }

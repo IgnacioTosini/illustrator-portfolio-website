@@ -8,6 +8,7 @@ import { SocialMedias } from '@/components/ui/SocialMedias/SocialMedias';
 import { getLinksByLocale } from '@/utils/links';
 import { animateFooter } from '@/animations/gsap/footer';
 import { useLanguage } from "@/providers/LanguageProvider";
+import Link from "next/link";
 import './_footer.scss';
 
 export default function Footer() {
@@ -27,16 +28,23 @@ export default function Footer() {
   return (
     <div ref={footerRef} className='footer'>
       <div className='footerContent'>
+        <div className="footerBrand">
+          <h4 className='name'>Alukkart</h4>
+          <p>{t("footer.studio")}</p>
+        </div>
 
-      <h4 className='name'>Alukkart</h4>
+        <div className='footerLinks'>
+          <Links links={links} />
+          <div className="footerMeta">
+            <p>© {new Date().getFullYear()} Alukkart. {t("footer.rightsReserved")}</p>
+            <p>{t("footer.createdBy")}</p>
+          </div>
+        </div>
 
-      <div className='footerLinks'>
-        <Links links={links} />
-        <p>© {new Date().getFullYear()} Alukkart. {t("footer.rightsReserved")}</p>
-        <p>{t("footer.createdBy")}</p>
-      </div>
-
-        <SocialMedias />
+        <div className="footerActions">
+          <Link href="/#contact" className="footerCta">{t("footer.cta")}</Link>
+          <SocialMedias />
+        </div>
       </div>
     </div>
   )

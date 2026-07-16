@@ -29,6 +29,7 @@ export default function AboutSection() {
           alt={t("about.imageAlt")}
           width={500}
           height={500}
+          sizes="(max-width: 768px) 92vw, 500px"
         />
 
         <div className="aboutSectionText">

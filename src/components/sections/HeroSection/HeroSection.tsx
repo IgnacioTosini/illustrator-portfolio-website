@@ -25,13 +25,24 @@ export default function HeroSection() {
   return (
     <div ref={heroRef} className="heroSection">
       <div className="heroImageReveal">
-        <Image src={'/alukkart.webp'} alt="Alukkart" width={550} height={500} />
+        <Image
+          src={'/alukkart.webp'}
+          alt="Alukkart"
+          width={550}
+          height={500}
+          priority
+          sizes="(max-width: 768px) 86vw, 550px"
+        />
       </div>
 
       <Title headingLevel={1} title={t("hero.title")} subTitle={t("hero.subtitle")} />
+      <p className="heroProof">{t("hero.proof")}</p>
       <div className="heroSectionButton">
         <Link href={'/#works'} className="viewButton">
           <span>{t("hero.ctaViewWorks")}</span> <IoMdArrowRoundDown />
+        </Link>
+        <Link href={'/#contact'} className="contactButton">
+          <span>{t("hero.ctaContact")}</span>
         </Link>
       </div>
     </div>

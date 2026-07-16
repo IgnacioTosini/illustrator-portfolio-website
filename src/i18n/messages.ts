@@ -10,6 +10,7 @@ export const messages = {
             themeLight: "Claro",
             themeDark: "Oscuro",
             themeSystem: "Sistema",
+            ctaContact: "Comisionar",
             openThemeSelector: "Abrir selector de tema",
             changeTheme: "Cambiar tema",
             themeSelector: "Selector de tema",
@@ -23,6 +24,8 @@ export const messages = {
             title: "Ilustrador Freelance",
             subtitle: "Diseño de personajes, ilustración editorial y narrativa visual.",
             ctaViewWorks: "Ver Trabajos",
+            ctaContact: "Consultar Proyecto",
+            proof: "Comic character illustration · Argentina · Fiverr 5.0",
         },
         workSection: {
             title: "Trabajos Seleccionados",
@@ -76,6 +79,15 @@ export const messages = {
         footer: {
             rightsReserved: "Todos los derechos reservados.",
             createdBy: "Creado por Ignacio Tosini",
+            cta: "Hablemos de tu proyecto",
+            studio: "Ilustración freelance para personajes, narrativa visual y proyectos editoriales.",
+        },
+        projectDetail: {
+            back: "Volver a trabajos",
+            year: "Año",
+            client: "Cliente",
+            category: "Categoría",
+            gallery: "Galería",
         },
         works: {
             allClients: "Todos",
@@ -88,6 +100,7 @@ export const messages = {
         worksPage: {
             title: "Portafolio",
             subtitle: "Todos los Trabajos",
+            intro: "Una selección de personajes, fan art, concept art e ilustraciones pensadas para contar historias con trazo, gesto y personalidad.",
         },
     },
     en: {
@@ -101,6 +114,7 @@ export const messages = {
             themeLight: "Light",
             themeDark: "Dark",
             themeSystem: "System",
+            ctaContact: "Commission",
             openThemeSelector: "Open theme selector",
             changeTheme: "Change theme",
             themeSelector: "Theme selector",
@@ -114,6 +128,8 @@ export const messages = {
             title: "Freelance Illustrator",
             subtitle: "Character design, editorial illustration, and visual storytelling.",
             ctaViewWorks: "View Works",
+            ctaContact: "Start a Project",
+            proof: "Comic character illustration · Argentina · Fiverr 5.0",
         },
         workSection: {
             title: "Selected Works",
@@ -167,6 +183,15 @@ export const messages = {
         footer: {
             rightsReserved: "All rights reserved.",
             createdBy: "Created by Ignacio Tosini",
+            cta: "Talk about your project",
+            studio: "Freelance illustration for characters, visual storytelling, and editorial projects.",
+        },
+        projectDetail: {
+            back: "Back to works",
+            year: "Year",
+            client: "Client",
+            category: "Category",
+            gallery: "Gallery",
         },
         works: {
             allClients: "All",
@@ -179,6 +204,7 @@ export const messages = {
         worksPage: {
             title: "Portfolio",
             subtitle: "All Works",
+            intro: "A selection of characters, fan art, concept art, and illustrations shaped to tell stories through line, gesture, and personality.",
         },
     },
 } as const;

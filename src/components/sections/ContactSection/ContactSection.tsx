@@ -3,10 +3,8 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { Title } from '@/components/ui/Title/Title'
-import { SocialMedias } from '@/components/ui/SocialMedias/SocialMedias'
 import { ContactForm } from './ContactForm/ContactForm'
 import { animateContactSection } from '@/animations/gsap/contactSection'
-import { trackEvent } from '@/lib/utils'
 import { useLanguage } from "@/providers/LanguageProvider";
 import './_contactSection.scss'
 
@@ -27,20 +25,6 @@ export default function ContactSection() {
       <Title title={t("contact.title")} subTitle={t("contact.subtitle")} />
       <div className='moreInfoContent'>
         <p>{t("contact.description")}</p>
-        <div className='personalData'>
-          <a
-            href="mailto:hello@alukkart.com"
-            onClick={() =>
-              trackEvent('contact_click', {
-                method: 'email',
-                location: 'contact_section',
-              })
-            }
-          >
-            hello@alukkart.com
-          </a>
-          <SocialMedias />
-        </div>
       </div>
 
       <ContactForm />

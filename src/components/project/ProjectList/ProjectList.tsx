@@ -8,9 +8,10 @@ import './_projectList.scss'
 interface Props {
     projects: Project[];
     selectedClientParam?: string | null;
+    priorityImages?: boolean;
 }
 
-export const ProjectList = ({ projects, selectedClientParam = null }: Props) => {
+export const ProjectList = ({ projects, selectedClientParam = null, priorityImages = false }: Props) => {
     const { t } = useLanguage();
 
     if (projects.length === 0) {
@@ -28,6 +29,7 @@ export const ProjectList = ({ projects, selectedClientParam = null }: Props) => 
                     key={project.slug + index}
                     project={project}
                     selectedClientParam={selectedClientParam}
+                    priority={priorityImages && index < 2}
                 />
             ))}
         </div>
