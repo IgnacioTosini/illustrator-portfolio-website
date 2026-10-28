@@ -17,10 +17,10 @@ export default function ContactSection({ homeContent, preview = false, localeOve
 
   useGSAP(
     () => {
-      if (!contactRef.current) return;
+      if (!contactRef.current || preview) return;
       return animateContactSection(contactRef.current)
     },
-    { scope: contactRef }
+    { scope: contactRef, dependencies: [preview] }
   )
 
   return (

@@ -30,10 +30,10 @@ export default function WorkSection({ projects, homeContent, localeOverride, pre
 
   useGSAP(
     () => {
-      if (!workRef.current) return;
+      if (!workRef.current || preview) return;
       return animateWorkSection(workRef.current);
     },
-    { scope: workRef }
+    { scope: workRef, dependencies: [preview] }
   );
 
   return (

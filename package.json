@@ -8,6 +8,7 @@
     "build": "npm run prisma:deploy && next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
     "prisma:deploy": "npx -y prisma@6.19.2 migrate deploy --schema prisma/schema.prisma && npx -y prisma@6.19.2 generate --schema prisma/schema.prisma"
   },
   "dependencies": {
@@ -35,12 +36,16 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^20",
     "@types/nodemailer": "^7.0.11",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
-    "typescript": "^5"
+    "jsdom": "^26.1.0",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }

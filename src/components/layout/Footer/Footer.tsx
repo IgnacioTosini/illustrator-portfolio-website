@@ -14,7 +14,7 @@ import { useWorkRouteTransition } from "@/components/layout/WorkRouteTransition/
 import Link from "next/link";
 import './_footer.scss';
 
-export default function Footer() {
+export default function Footer({ preview = false }: { preview?: boolean }) {
   const footerRef = useRef<HTMLDivElement | null>(null);
   const pathname = usePathname();
   const { locale, t } = useLanguage();
@@ -32,10 +32,10 @@ export default function Footer() {
 
   useGSAP(
     () => {
-      if (!footerRef.current) return;
+      if (!footerRef.current || preview) return;
       return animateFooter(footerRef.current);
     },
-    { scope: footerRef, dependencies: [pathname], revertOnUpdate: true }
+    { scope: footerRef, dependencies: [pathname, preview], revertOnUpdate: true }
   );
 
   return (

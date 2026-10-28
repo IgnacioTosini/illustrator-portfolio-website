@@ -29,7 +29,7 @@ interface WorkPreviewItem {
     alt: string;
 }
 
-export default function Header() {
+export default function Header({ preview = false }: { preview?: boolean }) {
     const headerRef = useRef<HTMLDivElement | null>(null);
     const previewRequestedRef = useRef(false);
     const previewAbortRef = useRef<AbortController | null>(null);
@@ -42,6 +42,7 @@ export default function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isWorksPreviewOpen, setIsWorksPreviewOpen] = useState(false);
     const [previewWorks, setPreviewWorks] = useState<WorkPreviewItem[]>([]);
+    const [previewLoadState, setPreviewLoadState] = useState<"idle" | "loading" | "ready" | "error">("idle");
     const activeLink = pathname === "/" ? activeSectionLink : pathname === "/works" ? "/works" : null;
     const workPreviewItems: WorkPreviewItem[] = previewWorks.length ? previewWorks : [{
         id: "preview",
@@ -57,15 +58,16 @@ export default function Header() {
         navigateToWork(event, { href, image: item.image, title: href === "/works" ? t("workSection.title") : item.title });
     };
 
-    const openWorksPreview = () => {
+    const openWorksPreview = (fromMobileTap = false) => {
         if (suppressPreviewFocusRef.current) {
             suppressPreviewFocusRef.current = false;
             return;
         }
-        if (!window.matchMedia("(min-width: 900px) and (hover: hover)").matches) return;
+        if (!fromMobileTap && !window.matchMedia("(min-width: 900px) and (hover: hover)").matches) return;
         setIsWorksPreviewOpen(true);
         if (previewRequestedRef.current) return;
         previewRequestedRef.current = true;
+        setPreviewLoadState("loading");
         const controller = new AbortController();
         previewAbortRef.current = controller;
         fetch("/api/projects?page=1&pageSize=6", { signal: controller.signal })
@@ -82,13 +84,27 @@ export default function Header() {
                         image: project.images![0].url,
                         alt: project.images![0].alt || project.title,
                     }));
-                if (items.length) setPreviewWorks(items);
+                if (items.length) {
+                    setPreviewWorks(items);
+                    setPreviewLoadState("ready");
+                } else {
+                    setPreviewLoadState("error");
+                }
             })
-            .catch(() => {});
+            .catch(() => {
+                if (!controller.signal.aborted) setPreviewLoadState("error");
+            });
     };
 
     const handleSectionLinkClick = (event: React.MouseEvent<HTMLAnchorElement>, link: string) => {
         if (link === "/works") {
+            if (window.matchMedia("(max-width: 768px)").matches && event.button === 0 &&
+                !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                event.preventDefault();
+                setIsMobileMenuOpen(false);
+                openWorksPreview(true);
+                return;
+            }
             openWorkRoute(event, link, workPreviewItems[0]);
             return;
         }
@@ -142,10 +158,10 @@ export default function Header() {
 
     useGSAP(
         () => {
-            if (!headerRef.current) return;
+            if (!headerRef.current || preview) return;
             return animateHeader(headerRef.current);
         },
-        { scope: headerRef, dependencies: [], revertOnUpdate: true }
+        { scope: headerRef, dependencies: [preview], revertOnUpdate: true }
     );
 
     useEffect(() => {
@@ -179,6 +195,15 @@ export default function Header() {
             desktopViewport.removeEventListener("change", handleViewportChange);
         };
     }, [isMobileMenuOpen]);
+
+    useEffect(() => {
+        if (!isWorksPreviewOpen) return;
+        const handlePointerDown = (event: PointerEvent) => {
+            if (!headerRef.current?.contains(event.target as Node)) setIsWorksPreviewOpen(false);
+        };
+        document.addEventListener("pointerdown", handlePointerDown);
+        return () => document.removeEventListener("pointerdown", handlePointerDown);
+    }, [isWorksPreviewOpen]);
 
     useEffect(() => {
         if (pathname !== "/") {
@@ -228,9 +253,12 @@ export default function Header() {
         <div
             ref={headerRef}
             className="header"
-            onMouseLeave={() => setIsWorksPreviewOpen(false)}
+            onMouseLeave={() => {
+                if (window.matchMedia("(min-width: 900px) and (hover: hover)").matches) setIsWorksPreviewOpen(false);
+            }}
             onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget as Node)) setIsWorksPreviewOpen(false);
+                if (window.matchMedia("(min-width: 900px) and (hover: hover)").matches &&
+                    !event.currentTarget.contains(event.relatedTarget as Node)) setIsWorksPreviewOpen(false);
             }}
             onKeyDown={(event) => {
                 if (event.key !== "Escape" || !isWorksPreviewOpen) return;
@@ -256,6 +284,7 @@ export default function Header() {
                     onLinkEnter={(link) => link === "/works" ? openWorksPreview() : setIsWorksPreviewOpen(false)}
                     onLinkKeyDown={(event, link) => {
                         if (link !== "/works" || event.key !== "ArrowDown") return;
+                        if (!window.matchMedia("(min-width: 900px) and (hover: hover)").matches) return;
                         event.preventDefault();
                         openWorksPreview();
                         window.requestAnimationFrame(() => headerRef.current?.querySelector<HTMLAnchorElement>(".headerWorkPreviewAction")?.focus());
@@ -294,6 +323,7 @@ export default function Header() {
             </div>
             <div className={`headerWorkPreview${isWorksPreviewOpen ? " is-open" : ""}`} aria-hidden={!isWorksPreviewOpen}>
                 <div className="headerWorkPreviewIntro">
+                    <button type="button" className="headerWorkPreviewClose" onClick={() => setIsWorksPreviewOpen(false)} aria-label={locale === "es" ? "Cerrar vista rápida" : "Close quick look"}>×</button>
                     <span className="headerWorkPreviewEyebrow">{locale === "es" ? "VISTA RÁPIDA / 01—03" : "QUICK LOOK / 01—03"}</span>
                     <h2>{t("workSection.title")}</h2>
                     <p>{locale === "es" ? "Una tira de historias antes de entrar a la galería." : "A strip of stories before entering the gallery."}</p>
@@ -301,10 +331,17 @@ export default function Header() {
                         {locale === "es" ? "Abrir la galería" : "Open the gallery"} <span aria-hidden="true">↗</span>
                     </Link>
                 </div>
-                <div className={`headerWorkPreviewGallery${workPreviewItems.length === 1 ? " is-single" : ""}`}>
+                {previewWorks.length === 0 && (
+                    <p className="headerWorkPreviewStatus" role="status">
+                        {previewLoadState === "error"
+                            ? locale === "es" ? "Abrí la galería para ver todos los proyectos." : "Open the gallery to see every project."
+                            : locale === "es" ? "Cargando obras…" : "Loading artwork…"}
+                    </p>
+                )}
+                <div className={`headerWorkPreviewGallery${workPreviewItems.length === 1 ? " is-single" : ""}${previewWorks.length === 0 ? " is-fallback" : ""}`}>
                     {workPreviewItems.map((item, index) => (
                         <Link href={item.href} key={item.id} className="headerWorkPreviewTile" onClick={(event) => openWorkRoute(event, item.href, item)}>
-                            <Image src={item.image} alt={item.alt} fill quality={85} sizes="(max-width: 1200px) 28vw, 280px" />
+                            <span className="headerWorkPreviewTileArt"><Image src={item.image} alt={item.alt} fill quality={85} sizes="(max-width: 768px) 120px, (max-width: 1200px) 28vw, 280px" /></span>
                             <span className="headerWorkPreviewTileLabel"><small>{String(index + 1).padStart(2, "0")}</small>{item.title}</span>
                         </Link>
                     ))}

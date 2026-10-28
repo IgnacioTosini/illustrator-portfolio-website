@@ -20,7 +20,7 @@ export default function NarrativeGallery({ projects, locale, preview = false }: 
   const navigateToWork = useOptionalWorkRouteTransition();
 
   useGSAP(() => {
-    if (!viewportRef.current || preview || projects.length < 2) return;
+    if (!viewportRef.current || preview || projects.length === 0) return;
     return animateNarrativeGallery(viewportRef.current);
   }, { scope: viewportRef, dependencies: [preview, projects.length] });
 

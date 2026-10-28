@@ -154,8 +154,33 @@
 }
 
 @media (max-width: 899px) {
+    .narrativeViewport {
+        position: relative;
+        gap: clamp(1rem, 4vw, 1.5rem);
+        padding-left: 1.15rem;
+    }
+
     .narrativePanel {
+        position: relative;
         grid-template-columns: minmax(0, 1fr);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 2rem;
+            left: -1.46rem;
+            width: .64rem;
+            height: .64rem;
+            border: 2px solid $color-accent;
+            border-radius: 50%;
+            background: $primary-color;
+            transition: background-color .35s ease, box-shadow .35s ease;
+        }
+
+        &.is-seen::before {
+            background: $color-accent;
+            box-shadow: 0 0 0 .3rem rgba($color-accent-rgb, .15);
+        }
     }
 
     .narrativeArtwork {
@@ -166,6 +191,60 @@
 
     .narrativeContent h3 {
         font-size: clamp(2.2rem, 9vw, 3.5rem);
+    }
+
+    .narrativeProgress {
+        --line-progress: 0%;
+        position: absolute;
+        inset: 2.25rem auto 2.25rem .08rem;
+        display: block;
+        width: 3px;
+        border-radius: 999px;
+        background: rgba($color-text-rgb, .22);
+        pointer-events: none;
+
+        span {
+            display: block;
+            width: 100%;
+            height: var(--line-progress);
+            border-radius: inherit;
+            background: $color-accent;
+            box-shadow: 0 0 10px rgba($color-accent-rgb, .7);
+            transform: none;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: var(--line-progress);
+            left: 50%;
+            width: .6rem;
+            height: .6rem;
+            border-radius: 50%;
+            background: $color-accent;
+            box-shadow: 0 0 0 .2rem rgba($color-accent-rgb, .16), 0 0 12px rgba($color-accent-rgb, .75);
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    .narrativeStagePreview .narrativeViewport {
+        padding-left: 0;
+    }
+
+    .narrativeStagePreview .narrativePanel::before,
+    .narrativeStagePreview .narrativeProgress {
+        display: none;
+    }
+}
+
+@media (max-width: 899px) and (prefers-reduced-motion: reduce) {
+    .narrativePanel::before {
+        background: $color-accent;
+        transition: none;
+    }
+
+    .narrativeProgress {
+        --line-progress: 100%;
     }
 }
 

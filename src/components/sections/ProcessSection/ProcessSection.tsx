@@ -24,10 +24,10 @@ export default function ProcessSection({ homeContent, localeOverride, preview = 
 
   useGSAP(
     () => {
-      if (!processRef.current) return;
+      if (!processRef.current || preview) return;
       return animateProcessSection(processRef.current, { preview });
     },
-    { scope: processRef }
+    { scope: processRef, dependencies: [preview] }
   );
 
   return (

@@ -7,6 +7,46 @@ gsap.registerPlugin(ScrollTrigger);
 export const animateNarrativeGallery = (viewport: HTMLElement) => {
     const media = gsap.matchMedia(viewport);
 
+    media.add("(max-width: 899px) and (prefers-reduced-motion: no-preference)", () => {
+        const panels = gsap.utils.toArray<HTMLElement>(".narrativePanel", viewport);
+
+        panels.forEach((panel) => {
+            const artwork = panel.querySelector<HTMLElement>(".narrativeArtwork");
+            const image = artwork?.querySelector("img");
+            const content = panel.querySelector<HTMLElement>(".narrativeContent");
+            if (!artwork || !image || !content) return;
+
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: panel,
+                    start: "top 88%",
+                    once: true,
+                    onEnter: () => panel.classList.add("is-seen"),
+                },
+            })
+                .fromTo(panel, { autoAlpha: 0, y: 42 }, { autoAlpha: 1, y: 0, duration: 0.72, ease: "power3.out" }, 0)
+                .fromTo(artwork, { clipPath: "inset(0 0 24% 0 round 12px)" }, { clipPath: "inset(0 0 0% 0 round 12px)", duration: 0.85, ease: "power3.out" }, 0.06)
+                .fromTo(image, { scale: 1.08 }, { scale: 1, duration: 1, ease: "power2.out" }, 0)
+                .fromTo(content, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" }, 0.18);
+        });
+
+        const progressRail = viewport.querySelector<HTMLElement>(".narrativeProgress");
+        if (progressRail) {
+            gsap.to(progressRail, {
+                "--line-progress": "100%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: viewport,
+                    start: "top 85%",
+                    end: "bottom 35%",
+                    scrub: 0.3,
+                },
+            });
+        }
+
+        return () => panels.forEach((panel) => panel.classList.remove("is-seen"));
+    });
+
     media.add("(min-width: 900px) and (min-height: 620px) and (prefers-reduced-motion: no-preference)", () => {
         const panels = gsap.utils.toArray<HTMLElement>(".narrativePanel", viewport);
         if (panels.length < 2) return;

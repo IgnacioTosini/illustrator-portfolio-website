@@ -17,6 +17,8 @@ import ProcessSection from '@/components/sections/ProcessSection/ProcessSection'
 import ContactSection from '@/components/sections/ContactSection/ContactSection';
 import Header from '@/components/layout/Header/Header';
 import Footer from '@/components/layout/Footer/Footer';
+import { WorkRouteTransitionProvider } from '@/components/layout/WorkRouteTransition/WorkRouteTransition';
+import { SectionNavigationProvider } from '@/components/layout/SectionNavigation/SectionNavigation';
 import './_homeContentEditor.scss';
 import { dataUrlToImageFile, deleteUploadedImageUrls, uploadImageFiles } from '@/lib/client/project-images';
 
@@ -193,15 +195,21 @@ export default function HomeContentEditor({ initialContent, projects }: Props) {
                         <button type="button" className="previewPublishButton" onClick={saveChanges} disabled={isSaving}>{isSaving ? 'Guardando…' : 'Guardar cambios'}</button>
                     </div>
                 </div>
-                <Header />
-                <main className="home homePreviewCanvas" id="top">
-                    <HeroSection homeContent={previewContent} preview localeOverride={locale} />
-                    <WorkSection projects={projects} homeContent={previewContent} localeOverride={locale} preview />
-                    <AboutSection homeContent={previewContent} localeOverride={locale} />
-                    <ProcessSection homeContent={previewContent} localeOverride={locale} preview />
-                    <ContactSection homeContent={previewContent} preview localeOverride={locale} />
-                </main>
-                <Footer />
+                <WorkRouteTransitionProvider>
+                    <SectionNavigationProvider>
+                        <div className="homePreviewBody" inert>
+                            <Header preview />
+                            <main className="home homePreviewCanvas" id="top">
+                                <HeroSection homeContent={previewContent} preview localeOverride={locale} />
+                                <WorkSection projects={projects} homeContent={previewContent} localeOverride={locale} preview />
+                                <AboutSection homeContent={previewContent} localeOverride={locale} preview />
+                                <ProcessSection homeContent={previewContent} localeOverride={locale} preview />
+                                <ContactSection homeContent={previewContent} preview localeOverride={locale} />
+                            </main>
+                            <Footer preview />
+                        </div>
+                    </SectionNavigationProvider>
+                </WorkRouteTransitionProvider>
             </div>
         );
     }

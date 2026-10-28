@@ -9,7 +9,7 @@ import { useLanguage } from "@/providers/LanguageProvider";
 import './_aboutSection.scss';
 import { HomeContent } from '@/types/home-content';
 
-export default function AboutSection({ homeContent, localeOverride }: { homeContent?: HomeContent; localeOverride?: 'es' | 'en' }) {
+export default function AboutSection({ homeContent, localeOverride, preview = false }: { homeContent?: HomeContent; localeOverride?: 'es' | 'en'; preview?: boolean }) {
   const aboutRef = useRef<HTMLDivElement | null>(null);
   const { t, locale: currentLocale } = useLanguage();
   const locale = localeOverride ?? currentLocale;
@@ -17,10 +17,10 @@ export default function AboutSection({ homeContent, localeOverride }: { homeCont
 
   useGSAP(
     () => {
-      if (!aboutRef.current) return;
+      if (!aboutRef.current || preview) return;
       return animateAboutSection(aboutRef.current);
     },
-    { scope: aboutRef }
+    { scope: aboutRef, dependencies: [preview] }
   );
 
   return (

@@ -24,10 +24,10 @@ export default function HeroSection({ homeContent, featuredProject, preview = fa
 
   useGSAP(
     () => {
-      if (!heroRef.current) return;
+      if (!heroRef.current || preview) return;
       return animateHeroSection(heroRef.current, { preview: preview || !featuredProject });
     },
-    { scope: heroRef }
+    { scope: heroRef, dependencies: [preview, Boolean(featuredProject)] }
   );
 
   return (
