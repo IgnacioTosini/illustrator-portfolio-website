@@ -7,10 +7,13 @@ import { ContactForm } from './ContactForm/ContactForm'
 import { animateContactSection } from '@/animations/gsap/contactSection'
 import { useLanguage } from "@/providers/LanguageProvider";
 import './_contactSection.scss'
+import { HomeContent } from '@/types/home-content';
 
-export default function ContactSection() {
+export default function ContactSection({ homeContent, preview = false, localeOverride }: { homeContent?: HomeContent; preview?: boolean; localeOverride?: 'es' | 'en' }) {
   const contactRef = useRef<HTMLDivElement | null>(null)
-  const { t } = useLanguage();
+  const { t, locale: currentLocale } = useLanguage();
+  const locale = localeOverride ?? currentLocale;
+  const content = homeContent?.[locale].contact;
 
   useGSAP(
     () => {
@@ -22,12 +25,12 @@ export default function ContactSection() {
 
   return (
     <div ref={contactRef} className='contactSection' id={'contact'}>
-      <Title title={t("contact.title")} subTitle={t("contact.subtitle")} />
+      <Title title={content?.title ?? t("contact.title")} subTitle={content?.subtitle ?? t("contact.subtitle")} />
       <div className='moreInfoContent'>
-        <p>{t("contact.description")}</p>
+        <p>{content?.description ?? t("contact.description")}</p>
       </div>
 
-      <ContactForm />
+      {preview ? <div className="contactPreviewNotice">Formulario de contacto: vista previa no interactiva</div> : <ContactForm />}
     </div>
   )
 }

@@ -7,10 +7,13 @@ import { Title } from "@/components/ui/Title/Title";
 import { animateAboutSection } from "@/animations/gsap/aboutSection";
 import { useLanguage } from "@/providers/LanguageProvider";
 import './_aboutSection.scss';
+import { HomeContent } from '@/types/home-content';
 
-export default function AboutSection() {
+export default function AboutSection({ homeContent, localeOverride }: { homeContent?: HomeContent; localeOverride?: 'es' | 'en' }) {
   const aboutRef = useRef<HTMLDivElement | null>(null);
-  const { t } = useLanguage();
+  const { t, locale: currentLocale } = useLanguage();
+  const locale = localeOverride ?? currentLocale;
+  const content = homeContent?.[locale].about;
 
   useGSAP(
     () => {
@@ -22,42 +25,36 @@ export default function AboutSection() {
 
   return (
     <div ref={aboutRef} className="aboutSection" id="about">
-      <Title title={t("about.title")} subTitle={t("about.subtitle")} />
+      <Title title={content?.title ?? t("about.title")} subTitle={content?.subtitle ?? t("about.subtitle")} />
       <div className="aboutSectionContent">
         <Image
-          src={'/alukkart.webp'}
-          alt={t("about.imageAlt")}
+          src={homeContent?.aboutImage ?? '/alukkart.webp'}
+          alt={content?.imageAlt ?? t("about.imageAlt")}
           width={500}
           height={500}
+          quality={90}
           sizes="(max-width: 768px) 92vw, 500px"
         />
 
         <div className="aboutSectionText">
-          <p>{t("about.paragraph1")}</p>
-
-          <p>{t("about.paragraph2")}</p>
-
-          <p>{t("about.paragraph3")}</p>
-
-          <p>{t("about.paragraph4")}</p>
+          {(content?.paragraphs ?? [t("about.paragraph1"), t("about.paragraph2"), t("about.paragraph3"), t("about.paragraph4")]).map((paragraph, index) => (
+            <p key={`about-paragraph-${index}`}>{paragraph}</p>
+          ))}
           <div className="aboutSectionAbilitiesTools">
             <div className="abilities">
-              <h3>{t("about.abilitiesTitle")}</h3>
+              <h3>{content?.abilitiesTitle ?? t("about.abilitiesTitle")}</h3>
               <ul className="abilitiList">
-                <li className="abilitie">Comic & cartoon</li>
-                <li className="abilitie">Pen & ink</li>
-                <li className="abilitie">Game</li>
-                <li className="abilitie">Concept art</li>
-                <li className="abilitie">Fan art</li>
-                <li className="abilitie">Anatomy, objects and people</li>
+                {(content?.abilities ?? ['Comic & cartoon', 'Pen & ink', 'Game', 'Concept art', 'Fan art', 'Anatomy, objects and people']).map((ability) => (
+                  <li className="abilitie" key={ability}>{ability}</li>
+                ))}
               </ul>
             </div>
             <div className="tools">
-              <h3>{t("about.toolsTitle")}</h3>
+              <h3>{content?.toolsTitle ?? t("about.toolsTitle")}</h3>
               <ul className="toolList">
-                <li className="tool">Huion Kamvas 13</li>
-                <li className="tool">Clip Studio Paint</li>
-                <li className="tool">Photoshop</li>
+                {(content?.tools ?? ['Huion Kamvas 13', 'Clip Studio Paint', 'Photoshop']).map((tool) => (
+                  <li className="tool" key={tool}>{tool}</li>
+                ))}
               </ul>
             </div>
           </div>

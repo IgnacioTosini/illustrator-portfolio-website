@@ -3,13 +3,11 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Title } from '@/components/ui/Title/Title';
 import { CategoryList } from '../CategoryList/CategoryList';
 import { Category } from '@/types';
 import { AdminModal } from '../../ui/AdminModal/AdminModal';
 import { createCategory, updatedCategory } from '@/actions/category/category-actions';
 import { toast } from 'react-toastify';
-import './_categoriesClient.scss';
 
 interface Props {
     categories: Category[];
@@ -82,43 +80,66 @@ export default function CategoriesClient({ categories }: Props) {
 
     return (
         <div className="categoriesClient">
-            <Title title={'Categorias'} subTitle={'Gestiona tus categorias'} />
-            <div className="dashboardLinks">
-                <button onClick={openCreate} className="dashboardLink">Agregar nueva categoría</button>
+            <section className="managementSectionHeader">
+                <div>
+                    <span className="managementEyebrow">ORGANIZACIÓN</span>
+                    <h1>Categorías</h1>
+                    <p>Clasifica el trabajo para que sea más fácil de explorar.</p>
+                </div>
+                <button onClick={openCreate} className="dashboardLink"><span aria-hidden="true">＋</span> Agregar categoría</button>
+            </section>
+            <div className="managementListToolbar">
+                <p>{filteredCategories.length} {filteredCategories.length === 1 ? 'categoría' : 'categorías'}</p>
+                <label className="managementSearch">
+                    <span aria-hidden="true">⌕</span>
+                    <input
+                        type="search"
+                        placeholder="Buscar categorías"
+                        aria-label="Buscar categorías por nombre o slug"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </label>
             </div>
-            <input
-                type="text"
-                placeholder="Buscar categoría..."
-                className="categorySearch"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
-            <CategoryList categories={filteredCategories} onEdit={openEdit} />
-            <AdminModal isOpen={mode !== null} onClose={closeModal}>
-                {mode === 'create' ? <h2>Nueva categoría</h2> : <h2>Editar categoría</h2>}
+            {filteredCategories.length ? (
+                <CategoryList categories={filteredCategories} onEdit={openEdit} />
+            ) : (
+                <div className="managementEmptyState">
+                    <strong>{categories.length ? 'No encontramos categorías.' : 'Todavía no hay categorías.'}</strong>
+                    <span>{categories.length ? 'Prueba otra búsqueda.' : 'Crea categorías para ordenar tus proyectos.'}</span>
+                </div>
+            )}
+            <AdminModal
+                isOpen={mode !== null}
+                onClose={closeModal}
+                title={mode === 'edit' ? 'Editar categoría' : 'Nueva categoría'}
+                description={mode === 'edit' ? 'Actualiza el nombre o el identificador de esta categoría.' : 'Crea una categoría para mantener ordenado el portfolio.'}
+            >
                 <form onSubmit={handleSubmit} className="categoryForm">
                     <div className="field">
-                        <label>Nombre</label>
+                        <label htmlFor="category-name">Nombre</label>
                         <input
+                            id="category-name"
                             name="name"
+                            required
                             defaultValue={mode === 'edit' ? selectedCategory?.name : ''}
                         />
                     </div>
 
                     <div className="field">
-                        <label>Slug</label>
+                        <label htmlFor="category-slug">Slug</label>
                         <input
+                            id="category-slug"
                             name="slug"
+                            required
                             defaultValue={mode === 'edit' ? selectedCategory?.slug : ''}
                         />
                     </div>
 
-                    <button type="submit" className="adminModalBtn">
-                        {mode === 'create' ? 'Crear' : 'Guardar cambios'}
-                    </button>
-                    <button onClick={closeModal} className="adminModalBtn">
-                        Cerrar
-                    </button>
+                    <div className="modalActions">
+                        <button type="button" onClick={closeModal} className="modalCancelBtn">Cancelar</button>
+                        <button type="submit" className="adminModalBtn">{mode === 'create' ? 'Crear categoría' : 'Guardar cambios'}</button>
+                    </div>
                 </form>
             </AdminModal>
         </div>

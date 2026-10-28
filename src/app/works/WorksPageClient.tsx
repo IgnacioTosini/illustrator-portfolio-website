@@ -11,9 +11,12 @@ import { useLanguage } from "@/providers/LanguageProvider";
 
 interface Props {
     projects: Project[];
+    totalItems: number;
+    currentPage: number;
+    selectedClient: string | null;
 }
 
-export default function WorksPageClient({ projects }: Props) {
+export default function WorksPageClient({ projects, totalItems, currentPage, selectedClient }: Props) {
     const worksRef = useRef<HTMLDivElement | null>(null);
     const { t } = useLanguage();
 
@@ -30,7 +33,7 @@ export default function WorksPageClient({ projects }: Props) {
             <Title headingLevel={1} title={t("worksPage.title")} subTitle={t("worksPage.subtitle")} />
             <p className="worksIntro">{t("worksPage.intro")}</p>
             <Suspense fallback={<span className="totalProjects">...</span>}>
-                <WorksClient projects={projects} />
+                <WorksClient projects={projects} totalItems={totalItems} currentPage={currentPage} selectedClient={selectedClient} />
             </Suspense>
         </div>
     );

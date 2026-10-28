@@ -135,7 +135,7 @@ export const ClientList = ({ selectedClient, onSelectClient }: Props) => {
                         <li
                             key={client.id}
                             data-client-item="true"
-                            className={`client ${selectedClient === client.slug ? 'selected' : ''} ${hasNoProjects ? 'disabled' : ''}`}
+                            className={`client ${selectedClient === client.slug || selectedClient === client.id ? 'selected' : ''} ${hasNoProjects ? 'disabled' : ''}`}
                             onClick={() => {
                                 if (hasNoProjects) {
                                     return;

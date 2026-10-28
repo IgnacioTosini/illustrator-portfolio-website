@@ -24,8 +24,13 @@
             transition: transform 0.4s ease;
         }
 
-        &:hover::after {
-            transform: scaleX(1);
+        &:hover {
+            color: $color-text;
+
+            &::after {
+                background-color: $color-accent;
+                transform: scaleX(1);
+            }
         }
 
         &.is-active {

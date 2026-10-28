@@ -58,3 +58,9 @@ model Client {
   website  String?
   projects Project[]
 }
+
+model HomeContent {
+  id        String   @id @default("home")
+  content   Json
+  updatedAt DateTime @updatedAt
+}

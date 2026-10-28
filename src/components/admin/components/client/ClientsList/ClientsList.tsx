@@ -3,13 +3,11 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Title } from '@/components/ui/Title/Title';
 import { Client } from '@/types';
 import { AdminModal } from '../../ui/AdminModal/AdminModal';
 import { toast } from 'react-toastify';
 import { ClientList } from '../ClientList/ClientList';
 import { createClient, updatedClient } from '@/actions/client/client-actions';
-import './_clientsList.scss';
 
 interface Props {
     clients: Client[];
@@ -82,43 +80,68 @@ export default function ClientsList({ clients }: Props) {
 
     return (
         <div className="clientsList">
-            <Title title={'Clientes'} subTitle={'Gestiona tus clientes'} />
-            <div className="dashboardLinks">
-                <button onClick={openCreate} className="dashboardLink">Agregar nuevo cliente</button>
+            <section className="managementSectionHeader">
+                <div>
+                    <span className="managementEyebrow">RELACIONES</span>
+                    <h1>Clientes</h1>
+                    <p>Organiza las marcas y personas detrás de cada proyecto.</p>
+                </div>
+                <button onClick={openCreate} className="dashboardLink"><span aria-hidden="true">＋</span> Agregar cliente</button>
+            </section>
+            <div className="managementListToolbar">
+                <p>{filteredClients.length} {filteredClients.length === 1 ? 'cliente' : 'clientes'}</p>
+                <label className="managementSearch">
+                    <span aria-hidden="true">⌕</span>
+                    <input
+                        type="search"
+                        placeholder="Buscar clientes"
+                        aria-label="Buscar clientes por nombre o sitio web"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </label>
             </div>
-            <input
-                type="text"
-                placeholder="Buscar cliente..."
-                className="clientSearch"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
-            <ClientList clients={filteredClients} onEdit={openEdit} />
-            <AdminModal isOpen={mode !== null} onClose={closeModal}>
-                {mode === 'create' ? <h2>Nuevo cliente</h2> : <h2>Editar cliente</h2>}
+            {filteredClients.length ? (
+                <ClientList clients={filteredClients} onEdit={openEdit} />
+            ) : (
+                <div className="managementEmptyState">
+                    <strong>{clients.length ? 'No encontramos clientes.' : 'Todavía no hay clientes.'}</strong>
+                    <span>{clients.length ? 'Prueba otra búsqueda.' : 'Agrega un cliente para asociarlo a tus proyectos.'}</span>
+                </div>
+            )}
+            <AdminModal
+                isOpen={mode !== null}
+                onClose={closeModal}
+                title={mode === 'edit' ? 'Editar cliente' : 'Nuevo cliente'}
+                description={mode === 'edit' ? 'Actualiza los datos de este cliente.' : 'Añade una persona o marca para asociarla a proyectos.'}
+            >
                 <form onSubmit={handleSubmit} className="clientForm">
                     <div className="field">
-                        <label>Nombre</label>
+                        <label htmlFor="client-name">Nombre</label>
                         <input
+                            id="client-name"
                             name="name"
+                            required
                             defaultValue={mode === 'edit' ? selectedClient?.name : ''}
                         />
                     </div>
 
                     <div className="field">
-                        <label>Website</label>
+                        <label htmlFor="client-website">Sitio web</label>
                         <input
+                            id="client-website"
+                            type="text"
+                            inputMode="url"
                             name="website"
+                            placeholder="https://ejemplo.com"
                             defaultValue={mode === 'edit' ? selectedClient?.website : ''}
                         />
                     </div>
 
-                    <button type="submit" className="adminModalBtn">
-                        {mode === 'create' ? 'Crear' : 'Guardar cambios'}
-                    </button>
-                    <button onClick={closeModal} className="adminModalBtn">
-                        Cerrar
-                    </button>
+                    <div className="modalActions">
+                        <button type="button" onClick={closeModal} className="modalCancelBtn">Cancelar</button>
+                        <button type="submit" className="adminModalBtn">{mode === 'create' ? 'Crear cliente' : 'Guardar cambios'}</button>
+                    </div>
                 </form>
             </AdminModal>
         </div>

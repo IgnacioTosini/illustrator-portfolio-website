@@ -1,0 +1,576 @@
+@use '../../../../styles/variables' as *;
+
+.homeContentEditor {
+    width: min(calc(100% - 2rem), 1320px);
+    margin: 0 auto;
+    padding: clamp(1.5rem, 4vw, 3.5rem) 0 7rem;
+}
+
+.homeEditorHeader {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    h1 {
+        margin-top: .5rem;
+        color: $color-text;
+        font-family: Georgia, serif;
+        font-size: clamp(2.2rem, 5vw, 3.3rem);
+        font-weight: 500;
+        letter-spacing: -.05em;
+        line-height: 1;
+    }
+
+    p {
+        margin-top: .7rem;
+        color: $color-text-secondary;
+        font-size: .9rem;
+    }
+}
+
+.homeEditorEyebrow {
+    color: $color-accent;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+}
+
+.openHomeLink {
+    color: $color-text-secondary;
+    font-size: .85rem;
+    text-decoration: none;
+
+    &:hover { color: $color-accent; }
+}
+
+.homeEditorForm {
+    overflow: hidden;
+    border: 1px solid rgba($border-color-rgb, .2);
+    border-radius: 1rem;
+    background: $color-button-secondary;
+    box-shadow: 0 18px 55px rgba($color-text-rgb, .05);
+}
+
+.homeEditorToolbar {
+    position: sticky;
+    top: 76px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .9rem clamp(1rem, 3vw, 1.6rem);
+    border-bottom: 1px solid rgba($border-color-rgb, .18);
+    background: rgba($color-button-secondary-rgb, .94);
+    backdrop-filter: blur(14px);
+}
+
+.localeTabs {
+    display: inline-flex;
+    gap: .25rem;
+    padding: .25rem;
+    border: 1px solid rgba($border-color-rgb, .18);
+    border-radius: .7rem;
+    background: $primary-color;
+
+    button {
+        min-height: 2.1rem;
+        padding: 0 .8rem;
+        border: 0;
+        border-radius: .5rem;
+        background: transparent;
+        color: $color-text-secondary;
+        font: inherit;
+        font-size: .78rem;
+        cursor: pointer;
+
+        &.is-active {
+            background: $color-button;
+            color: $primary-color;
+        }
+    }
+}
+
+.unsavedNote {
+    color: $color-text-secondary;
+    font-size: .76rem;
+}
+
+.homeEditorSection {
+    padding: clamp(1.1rem, 3vw, 1.7rem);
+
+    & + .homeEditorSection {
+        border-top: 1px solid rgba($border-color-rgb, .16);
+    }
+}
+
+.homeEditorSectionHeading {
+    display: flex;
+    align-items: flex-start;
+    gap: .8rem;
+    margin-bottom: 1.2rem;
+
+    > span {
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        width: 1.8rem;
+        height: 1.8rem;
+        border-radius: .55rem;
+        background: rgba($color-accent-rgb, .12);
+        color: $color-accent;
+        font-size: .7rem;
+        font-weight: 700;
+    }
+
+    h2 {
+        color: $color-text;
+        font-family: Georgia, serif;
+        font-size: 1.25rem;
+        font-weight: 500;
+    }
+
+    p {
+        margin-top: .25rem;
+        color: $color-text-secondary;
+        font-size: .78rem;
+    }
+}
+
+.homeEditorGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+}
+
+.homeEditorField {
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    min-width: 0;
+
+    &.is-full { grid-column: 1 / -1; }
+
+    label {
+        color: $color-text;
+        font-size: .8rem;
+        font-weight: 600;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        min-height: 2.75rem;
+        padding: .7rem .8rem;
+        border: 1px solid rgba($border-color-rgb, .24);
+        border-radius: .65rem;
+        background: $primary-color;
+        color: $color-text;
+        font: inherit;
+        font-size: .86rem;
+        outline: none;
+        transition: border-color .18s ease, box-shadow .18s ease;
+
+        &:focus {
+            border-color: $color-accent;
+            box-shadow: 0 0 0 3px rgba($color-accent-rgb, .12);
+        }
+    }
+
+    textarea {
+        min-height: 92px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+}
+
+.homeEditorImageField {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .55rem;
+    min-width: 0;
+
+    > span {
+        color: $color-text;
+        font-size: .8rem;
+        font-weight: 600;
+    }
+
+    .homeImagePreview {
+        position: relative;
+        display: block;
+        width: min(100%, 240px);
+        height: 145px;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid rgba($border-color-rgb, .2);
+        border-radius: .7rem;
+        background: $primary-color;
+        cursor: zoom-in;
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .25s ease;
+        }
+
+        > span {
+            position: absolute;
+            inset: auto 0 0;
+            padding: .55rem .7rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, .72));
+            color: #fff;
+            font-size: .72rem;
+            font-weight: 600;
+            text-align: left;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+
+        &:hover img,
+        &:focus-visible img { transform: scale(1.04); }
+        &:hover > span,
+        &:focus-visible > span { opacity: 1; }
+        &:focus-visible { outline: 2px solid $color-accent; outline-offset: 3px; }
+    }
+
+    .homeChooseImage {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.35rem;
+        padding: 0 .8rem;
+        overflow: hidden;
+        border: 1px solid rgba($border-color-rgb, .22);
+        border-radius: .6rem;
+        color: $color-text-secondary;
+        font-size: .78rem;
+        cursor: pointer;
+
+        &:hover { border-color: $color-accent; color: $color-accent; }
+
+        input {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+    }
+}
+
+@media (hover: none) {
+    .homeEditorImageField .homeImagePreview > span { opacity: 1; }
+}
+
+.stepEditorGroup {
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    padding: 1rem;
+    border: 1px solid rgba($border-color-rgb, .16);
+    border-radius: .8rem;
+    background: rgba($primary-color-rgb, .45);
+}
+
+.stepEditorHeading,
+.homeEditableListHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+}
+
+.processIconPicker {
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+
+    > span {
+        color: $color-text;
+        font-size: .75rem;
+        font-weight: 600;
+    }
+}
+
+.processIconOptions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .4rem;
+
+    button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: .3rem;
+        min-width: 0;
+        min-height: 3.4rem;
+        padding: .45rem .25rem;
+        border: 1px solid rgba($border-color-rgb, .2);
+        border-radius: .6rem;
+        background: $primary-color;
+        color: $color-text-secondary;
+        cursor: pointer;
+        transition: border-color .18s ease, color .18s ease, background .18s ease;
+
+        svg { width: 1.1rem; height: 1.1rem; }
+        span { overflow: hidden; max-width: 100%; font-size: .61rem; text-overflow: ellipsis; white-space: nowrap; }
+
+        &:hover { border-color: $color-accent; color: $color-accent; }
+        &.is-selected {
+            border-color: $color-accent;
+            background: rgba($color-accent-rgb, .11);
+            color: $color-accent;
+            box-shadow: inset 0 0 0 1px rgba($color-accent-rgb, .2);
+        }
+        &:focus-visible { outline: 2px solid $color-accent; outline-offset: 2px; }
+    }
+}
+
+.homeEditableList {
+    display: flex;
+    flex-direction: column;
+    grid-column: 1 / -1;
+    gap: .65rem;
+    min-width: 0;
+}
+
+.homeEditableListHeader > span {
+    color: $color-text;
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+.editableListRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: .55rem;
+    min-width: 0;
+
+    input {
+        width: 100%;
+        min-width: 0;
+        min-height: 2.65rem;
+        padding: .65rem .8rem;
+        border: 1px solid rgba($border-color-rgb, .24);
+        border-radius: .65rem;
+        background: $primary-color;
+        color: $color-text;
+        font: inherit;
+        font-size: .86rem;
+
+        &:focus {
+            border-color: $color-accent;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba($color-accent-rgb, .12);
+        }
+    }
+}
+
+.addEditorItem,
+.removeEditorItem {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    padding: .45rem .7rem;
+    border: 1px solid rgba($border-color-rgb, .22);
+    border-radius: .6rem;
+    background: transparent;
+    color: $color-text-secondary;
+    font: inherit;
+    font-size: .74rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: border-color .18s ease, color .18s ease, background .18s ease;
+
+    &:hover:not(:disabled) { border-color: $color-accent; color: $color-accent; }
+    &:disabled { cursor: not-allowed; opacity: .45; }
+}
+
+.removeEditorItem:hover:not(:disabled) {
+    border-color: $color-error;
+    color: $color-error;
+}
+
+.stepEditorGroup > .addEditorItem,
+.homeEditorGrid > .addEditorItem { grid-column: 1 / -1; }
+
+.emptyEditorList {
+    padding: .8rem;
+    border: 1px dashed rgba($border-color-rgb, .22);
+    border-radius: .65rem;
+    color: $color-text-secondary;
+    font-size: .8rem;
+}
+
+.stepEditorNumber {
+    color: $color-accent;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+}
+
+.homeEditorError {
+    margin: 0 1.5rem 1rem;
+    color: $color-error;
+    font-size: .84rem;
+}
+
+.homeEditorActions {
+    position: fixed;
+    left: 50%;
+    bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+    z-index: 1100;
+    display: flex;
+    justify-content: flex-end;
+    gap: .7rem;
+    padding: 1rem clamp(1rem, 3vw, 1.6rem);
+    border: 1px solid rgba($border-color-rgb, .22);
+    border-radius: .9rem;
+    background: rgba($color-button-secondary-rgb, .94);
+    box-shadow: 0 12px 36px rgba($color-text-rgb, .18);
+    backdrop-filter: blur(14px);
+    transform: translateX(-50%);
+
+    button {
+        min-height: 2.75rem;
+        padding: 0 1rem;
+        border: 1px solid rgba($border-color-rgb, .25);
+        border-radius: .65rem;
+        font: inherit;
+        font-size: .84rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .homePreviewButton {
+        background: transparent;
+        color: $color-text;
+
+        &:hover { border-color: $color-accent; color: $color-accent; }
+    }
+
+    .homeSaveButton {
+        border-color: $color-button;
+        background: $color-button;
+        color: $primary-color;
+
+        &:hover:not(:disabled) { border-color: $color-accent; background: $color-accent; }
+        &:disabled { cursor: wait; opacity: .6; }
+    }
+}
+
+.homeDraftPreview {
+    .homePreviewToolbar {
+        position: sticky;
+        top: 76px;
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: .75rem clamp(1rem, 4vw, 3rem);
+        border-bottom: 1px solid rgba($border-color-rgb, .18);
+        background: rgba($color-button-secondary-rgb, .96);
+        box-shadow: 0 8px 24px rgba($color-text-rgb, .08);
+        backdrop-filter: blur(14px);
+
+        > div:first-child {
+            display: flex;
+            flex-direction: column;
+            gap: .2rem;
+        }
+
+        > div:first-child span {
+            color: $color-accent;
+            font-size: .62rem;
+            font-weight: 700;
+            letter-spacing: .16em;
+        }
+
+        strong { color: $color-text; font-size: .82rem; }
+    }
+
+    .homePreviewActions {
+        display: flex;
+        gap: .55rem;
+
+        button {
+            min-height: 2.4rem;
+            padding: 0 .8rem;
+            border: 1px solid rgba($border-color-rgb, .24);
+            border-radius: .6rem;
+            background: transparent;
+            color: $color-text;
+            font: inherit;
+            font-size: .78rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .previewPublishButton {
+            border-color: $color-button;
+            background: $color-button;
+            color: $primary-color;
+
+            &:disabled { opacity: .6; cursor: wait; }
+        }
+    }
+
+    .header {
+        position: relative;
+        top: auto;
+    }
+
+    .homePreviewCanvas {
+        pointer-events: none;
+    }
+}
+
+@media (max-width: 700px) {
+    .homeContentEditor { width: min(calc(100% - 1.25rem), 1320px); }
+    .homeEditorHeader { align-items: flex-start; flex-direction: column; }
+    .homeEditorGrid { grid-template-columns: 1fr; }
+    .homeEditorField.is-full { grid-column: auto; }
+    .unsavedNote { display: none; }
+    .homeEditorSection { padding: 1rem; }
+    .homeEditorSectionHeading { margin-bottom: 1rem; }
+    .homeEditorField input,
+    .homeEditorField textarea { font-size: 16px; }
+    .homeEditorActions {
+        width: calc(100vw - 1rem);
+        justify-content: stretch;
+        gap: .5rem;
+        padding: .65rem;
+
+        button { flex: 1; min-width: 0; padding-inline: .55rem; }
+    }
+    .homeDraftPreview .homePreviewToolbar { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 900px) {
+    .homeEditorToolbar {
+        position: relative;
+        top: auto;
+        z-index: auto;
+        backdrop-filter: none;
+    }
+
+    .homeDraftPreview .homePreviewToolbar { top: 124px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .homeContentEditor * { transition: none !important; }
+}

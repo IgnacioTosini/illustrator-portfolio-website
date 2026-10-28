@@ -15,9 +15,10 @@ import './_projectGallery.scss';
 interface Props {
     project: Project;
     selectedClientParam?: string | null;
+    selectedPageParam?: number;
 }
 
-export default function ProjectGallery({ project, selectedClientParam = null }: Props) {
+export default function ProjectGallery({ project, selectedClientParam = null, selectedPageParam = 1 }: Props) {
     const [mainImage, setMainImage] = useState(project.images[0]);
     const workPageRef = useRef<HTMLDivElement | null>(null);
     const imageContainerRef = useRef<HTMLDivElement | null>(null);
@@ -85,10 +86,13 @@ export default function ProjectGallery({ project, selectedClientParam = null }: 
         { scope: workPageRef }
     );
 
-    const backHref = selectedClientParam
+    const backHref = selectedClientParam || selectedPageParam > 1
         ? {
             pathname: '/works',
-            query: { client: selectedClientParam },
+            query: {
+                ...(selectedClientParam ? { client: selectedClientParam } : {}),
+                ...(selectedPageParam > 1 ? { page: String(selectedPageParam) } : {}),
+            },
         }
         : '/works';
 
@@ -99,6 +103,7 @@ export default function ProjectGallery({ project, selectedClientParam = null }: 
                     src={mainImage.url}
                     alt={mainImage.alt || project.title}
                     fill
+                    quality={95}
                     sizes="100vw"
                     className="projectImage"
                 />
@@ -139,6 +144,7 @@ export default function ProjectGallery({ project, selectedClientParam = null }: 
                             alt={image.alt || project.title}
                             width={400}
                             height={300}
+                            quality={85}
                             sizes="(max-width: 768px) 92vw, 400px"
                             className={`projectCardImage ${mainImage.id === image.id ? "active" : ""}`}
                             onClick={() => handleSelectImage(image)}

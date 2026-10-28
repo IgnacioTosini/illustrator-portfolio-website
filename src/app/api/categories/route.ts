@@ -1,6 +1,7 @@
 import { deleteCategory } from "@/actions/category/category-actions";
 import { getCategories } from "@/actions/category/getCategories";
 import { NextResponse } from "next/server";
+import { isDashboardAuthenticated } from "@/lib/auth/dashboard";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -15,6 +16,10 @@ export async function GET() {
 }
 
 export async function DELETE(request: Request) {
+    if (!await isDashboardAuthenticated()) {
+        return NextResponse.json({ ok: false, message: "No autorizado" }, { status: 401 });
+    }
+
     try {
         const { id } = await request.json();
         if (!id) {

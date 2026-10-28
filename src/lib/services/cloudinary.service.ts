@@ -1,5 +1,5 @@
 import "server-only";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 type CloudinaryCredentials = {
     cloudName: string;
@@ -53,6 +53,34 @@ const getCloudinaryCredentials = (): CloudinaryCredentials | undefined => {
         cloudName: cloudNameFromUrl,
         apiKey,
         apiSecret,
+    };
+};
+
+export const createCloudinaryUploadSignature = () => {
+    const credentials = getCloudinaryCredentials();
+    if (!credentials) throw new Error("Faltan las credenciales de Cloudinary");
+
+    const timestamp = Math.floor(Date.now() / 1000);
+    const publicId = randomUUID();
+    const folder = process.env.CLOUDINARY_FOLDER?.trim();
+    const parameters: Record<string, string | number> = {
+        overwrite: "false",
+        public_id: publicId,
+        timestamp,
+        ...(folder ? { folder } : {}),
+    };
+    const signaturePayload = Object.keys(parameters)
+        .sort()
+        .map((key) => `${key}=${parameters[key]}`)
+        .join("&") + credentials.apiSecret;
+
+    return {
+        cloudName: credentials.cloudName,
+        apiKey: credentials.apiKey,
+        timestamp,
+        publicId,
+        folder,
+        signature: createHash("sha1").update(signaturePayload).digest("hex"),
     };
 };
 
@@ -151,3 +179,4 @@ export const uploadBase64ImageToCloudinary = async (base64: string, fileName: st
 
     return uploadedUrl;
 };
+

@@ -1,103 +1,156 @@
 @use '../../../../../styles/variables' as *;
 
 .projectCard {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-    padding: 0.5rem;
+    min-width: 0;
     overflow: hidden;
-    transition: all .3s ease-in-out;
-    text-decoration: none;
+    border: 1px solid rgba($border-color-rgb, .2);
+    border-radius: 1rem;
+    background: $color-button-secondary;
     color: $color-text;
+    transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+
+    &:hover {
+        border-color: rgba($color-accent-rgb, .5);
+        box-shadow: 0 14px 36px rgba($color-text-rgb, .08);
+        transform: translateY(-3px);
+    }
 
     .projectCardImageContainer {
         position: relative;
+        height: clamp(190px, 20vw, 270px);
         overflow: hidden;
-        border-radius: 1rem;
-        cursor: pointer;
+        background: rgba($color-accent-rgb, .1);
 
-        .projectCardImage {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            transition: transform .4s ease;
-        }
-
-        /* 🔥 Gradient overlay */
         &::after {
-            content: "";
+            content: '';
             position: absolute;
-            inset: 0;
-            background: linear-gradient(to top,
-                    rgba($color-button-rgb, 0.75) 0%,
-                    rgba($color-button-rgb, 0.4) 40%,
-                    rgba($color-button-rgb, 0) 70%);
-            opacity: 0;
-            transition: opacity .4s ease;
-            z-index: 1;
+            inset: 45% 0 0;
+            background: linear-gradient(transparent, rgba($color-text-rgb, .12));
+            pointer-events: none;
         }
+    }
 
-        .projectCardContent {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 2;
-            color: $color-hover-primary;
-            transform: translateY(10px);
-            opacity: 0;
-            transition: all .4s ease;
-        }
-
-        .projectCardOverlay {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 3;
-            display: flex;
-            gap: 0.5rem;
-            opacity: 0;
-            transform: translateY(-6px);
-            transition: all .25s ease;
-        }
-
-        .overlayButton {
-            text-decoration: none;
-            border: 1px solid rgba($color-hover-primary-rgb, 0.5);
-            color: $primary-color;
-            background: rgba($color-button-rgb, 0.45);
-            padding: 0.4rem 0.7rem;
-            border-radius: 0.5rem;
-            font-size: $font-size-xsmall;
-            cursor: pointer;
-        }
-
-        .overlayButton--danger {
-            border-color: rgba($color-error, 0.6);
-            color: $color-error;
-        }
-
-        .overlayButton:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+    .projectCardImage {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .45s ease;
     }
 
     &:hover .projectCardImage {
-        transform: scale(1.05);
+        transform: scale(1.035);
     }
 
-    &:hover .projectCardImageContainer::after {
-        opacity: 1;
+    .projectCardImagePlaceholder {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        height: 100%;
+        color: $color-accent;
+        font-family: Georgia, serif;
+        font-size: 4rem;
     }
 
-    &:hover .projectCardContent {
-        opacity: 1;
-        transform: translateY(0);
+    .projectFeaturedBadge {
+        position: absolute;
+        top: .8rem;
+        left: .8rem;
+        z-index: 1;
+        padding: .4rem .65rem;
+        border: 1px solid rgba($primary-color-rgb, .35);
+        border-radius: 999px;
+        background: rgba($primary-color-rgb, .88);
+        color: $color-text;
+        font-size: .7rem;
+        font-weight: 600;
+        backdrop-filter: blur(8px);
     }
 
-    &:hover .projectCardOverlay {
-        opacity: 1;
-        transform: translateY(0);
+    .projectCardDetails {
+        padding: 1rem;
+    }
+
+    .projectCardHeading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: .8rem;
+
+        h2 {
+            overflow: hidden;
+            color: $color-text;
+            font-size: 1rem;
+            font-weight: 600;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        p {
+            margin-top: .4rem;
+            overflow: hidden;
+            color: $color-text-secondary;
+            font-size: .78rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .projectCardYear {
+            flex: 0 0 auto;
+            color: $color-text-secondary;
+            font-size: .76rem;
+        }
+    }
+
+    .projectCardActions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .7rem;
+        margin-top: 1rem;
+        padding-top: .8rem;
+        border-top: 1px solid rgba($border-color-rgb, .16);
+
+        .projectEditAction,
+        .projectDeleteAction {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            font: inherit;
+            font-size: .78rem;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .projectEditAction {
+            color: $color-text;
+            font-weight: 600;
+
+            &:hover {
+                color: $color-accent;
+            }
+        }
+
+        .projectDeleteAction {
+            color: $color-text-secondary;
+
+            &:hover {
+                color: $color-error;
+            }
+
+            &:disabled {
+                cursor: wait;
+                opacity: .6;
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .projectCard,
+    .projectCardImage {
+        transition: none;
     }
 }

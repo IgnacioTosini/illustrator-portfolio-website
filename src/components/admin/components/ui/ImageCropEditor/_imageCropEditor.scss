@@ -1,0 +1,231 @@
+@use '../../../../../styles/variables' as *;
+
+.imageCropOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: rgba($color-button-rgb, .72);
+    backdrop-filter: blur(8px);
+}
+
+.imageCropDialog {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: min(100%, 620px);
+    min-width: 0;
+    box-sizing: border-box;
+    max-height: min(94dvh, 850px);
+    overflow-y: auto;
+    padding: clamp(1rem, 4vw, 1.5rem);
+    border: 1px solid rgba($border-color-rgb, .2);
+    border-radius: 1.1rem;
+    background: $color-button-secondary;
+    box-shadow: 0 28px 90px rgba($color-text-rgb, .24);
+}
+
+.imageCropHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba($border-color-rgb, .16);
+
+    > div > span {
+        color: $color-accent;
+        font-size: .66rem;
+        font-weight: 700;
+        letter-spacing: .18em;
+    }
+
+    h2 {
+        margin-top: .4rem;
+        color: $color-text;
+        font-family: Georgia, serif;
+        font-size: 1.55rem;
+        font-weight: 500;
+        letter-spacing: -.03em;
+    }
+
+    p {
+        margin-top: .45rem;
+        color: $color-text-secondary;
+        font-size: .82rem;
+        line-height: 1.45;
+    }
+}
+
+.imageCropClose {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid rgba($border-color-rgb, .24);
+    border-radius: .65rem;
+    background: transparent;
+    color: $color-text-secondary;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.imageCropWorkspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    place-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 220px;
+    overflow: hidden;
+    padding: .75rem;
+    border: 1px solid rgba($border-color-rgb, .15);
+    border-radius: .85rem;
+    background-color: rgba($color-text-rgb, .035);
+    background-image: linear-gradient(45deg, rgba($color-text-rgb, .04) 25%, transparent 25%), linear-gradient(-45deg, rgba($color-text-rgb, .04) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba($color-text-rgb, .04) 75%), linear-gradient(-45deg, transparent 75%, rgba($color-text-rgb, .04) 75%);
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    background-size: 16px 16px;
+}
+
+.imageCropStage {
+    position: relative;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: .35rem;
+    background: $primary-color;
+    box-shadow: 0 8px 28px rgba($color-text-rgb, .2);
+    touch-action: none;
+    user-select: none;
+
+    &.is-draggable { cursor: grab; }
+    &.is-draggable:active { cursor: grabbing; }
+
+    img {
+        position: absolute;
+        max-width: none;
+        object-fit: fill;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .cropLoading {
+        position: absolute;
+        inset: 50% auto auto 50%;
+        color: $color-text-secondary;
+        font-size: .85rem;
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+    }
+}
+
+.imageCropControls {
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+
+    label {
+        display: flex;
+        justify-content: space-between;
+        color: $color-text;
+        font-size: .84rem;
+        font-weight: 600;
+    }
+
+    output {
+        color: $color-accent;
+        font-variant-numeric: tabular-nums;
+    }
+
+    input[type='range'] {
+        width: 100%;
+        accent-color: $color-accent;
+        cursor: pointer;
+    }
+
+    .imageCropRangeLabels {
+        display: flex;
+        justify-content: space-between;
+        color: $color-text-secondary;
+        font-size: .7rem;
+    }
+}
+
+.imageCropError {
+    color: $color-error;
+    font-size: .82rem;
+    line-height: 1.45;
+}
+
+.imageCropActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: .65rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba($border-color-rgb, .16);
+
+    button {
+        min-height: 2.7rem;
+        padding: 0 1rem;
+        border: 1px solid rgba($border-color-rgb, .25);
+        border-radius: .65rem;
+        background: transparent;
+        color: $color-text-secondary;
+        font: inherit;
+        font-size: .86rem;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:disabled { cursor: wait; opacity: .55; }
+    }
+
+    .cropSaveButton {
+        border-color: $color-button;
+        background: $color-button;
+        color: $primary-color;
+
+        &:hover:not(:disabled) {
+            border-color: $color-accent;
+            background: $color-accent;
+        }
+    }
+
+    .cropCancelButton:hover:not(:disabled) {
+        border-color: $color-accent;
+        color: $color-accent;
+    }
+}
+
+@media (max-width: 480px) {
+    .imageCropOverlay { padding: .5rem; }
+    .imageCropDialog {
+        width: 100%;
+        max-height: calc(100dvh - 1rem);
+        gap: .8rem;
+        padding: .85rem;
+        border-radius: .9rem;
+    }
+    .imageCropHeader {
+        gap: .65rem;
+        padding-bottom: .75rem;
+
+        h2 { font-size: 1.35rem; }
+        p { font-size: .78rem; }
+    }
+    .imageCropWorkspace { min-height: 0; padding: .4rem; }
+    .imageCropStage { border-radius: .3rem; }
+    .imageCropActions {
+        gap: .5rem;
+        padding-top: .75rem;
+
+        button { min-height: 2.55rem; padding-inline: .75rem; font-size: .8rem; }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .imageCropOverlay *,
+    .imageCropDialog { animation: none !important; transition: none !important; }
+}

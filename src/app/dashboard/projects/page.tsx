@@ -1,7 +1,5 @@
-import { Title } from '@/components';
 import Link from 'next/link';
 import { AdminProjectList } from '@/components/admin/components/project/AdminProjectList/AdminProjectList';
-import './_dashboard.scss';
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -9,11 +7,15 @@ export const revalidate = 0;
 export default async function DashboardPage() {
   return (
     <div className="dashboardPage">
-      <Title title={'Proyectos'} subTitle={'Gestiona tus proyectos'} />
-      <div className='dashboardContent'>
-        <div className="dashboardLinks">
-          <Link href="/dashboard/projects/new" className="dashboardLink">Agregar nuevo proyecto</Link>
+      <div className="managementHeader">
+        <div>
+          <span className="managementEyebrow">BIBLIOTECA</span>
+          <h1>Proyectos</h1>
+          <p>Administra las piezas que aparecen en tu portfolio.</p>
         </div>
+        <Link href="/dashboard/projects/new" className="dashboardLink"><span aria-hidden="true">＋</span> Nuevo proyecto</Link>
+      </div>
+      <div className='dashboardContent'>
         <AdminProjectList />
       </div>
     </div>

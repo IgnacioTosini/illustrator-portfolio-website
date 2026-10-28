@@ -5,6 +5,7 @@ import HeroSection from "@/components/sections/HeroSection/HeroSection"
 import ProcessSection from "@/components/sections/ProcessSection/ProcessSection"
 import WorkSection from "@/components/sections/WorkSection/WorkSection"
 import { getFeaturedProjects } from "@/actions/project/getProjects"
+import { getHomeContent } from "@/actions/home/getHomeContent";
 
 export const revalidate = 300;
 
@@ -17,15 +18,15 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const projects = await getFeaturedProjects(6)
+  const [projects, homeContent] = await Promise.all([getFeaturedProjects(6), getHomeContent()]);
 
   return (
     <div className="home" id="top">
-      <HeroSection />
-      <WorkSection projects={projects} />
-      <AboutSection />
-      <ProcessSection />
-      <ContactSection />
+      <HeroSection homeContent={homeContent} featuredProject={projects.find((project) => project.images[0]?.url)} />
+      <WorkSection projects={projects} homeContent={homeContent} />
+      <AboutSection homeContent={homeContent} />
+      <ProcessSection homeContent={homeContent} />
+      <ContactSection homeContent={homeContent} />
     </div>
   )
 }

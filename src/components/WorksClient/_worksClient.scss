@@ -1,14 +1,40 @@
 @use '../../styles/variables' as *;
 
 .worksClient {
-    margin-top: 1.5rem;
+    margin-top: clamp(2rem, 4vw, 3.25rem);
+}
+
+.worksGalleryBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 1.75rem 0 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba($border-color-rgb, .22);
 }
 
 .totalProjects {
     display: inline-flex;
     align-items: center;
     min-height: 2rem;
-    margin-bottom: 1rem;
     font-size: $font-size-normal;
     color: $color-text-secondary;
+}
+
+.worksGalleryCue {
+    color: $color-text-secondary;
+    font-size: $font-size-small;
+    letter-spacing: .06em;
+
+    span {
+        margin-left: .35rem;
+        color: $color-accent;
+    }
+}
+
+@media (max-width: 640px) {
+    .worksGalleryCue {
+        display: none;
+    }
 }

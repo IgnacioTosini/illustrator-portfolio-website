@@ -11,21 +11,22 @@ export const CategoryList = ({ categories, onEdit }: Props) => {
     return (
         <div className="categoryList">
             <table className="categoryTable">
+                <caption className="visuallyHidden">Categorías y cantidad de proyectos asociados</caption>
                 <thead className="categoryTableHeader">
                     <tr className="categoryTableRow">
-                        <th className="categoryTableCell">ID</th>
-                        <th className="categoryTableCell">Slug</th>
-                        <th className="categoryTableCell">Nombre</th>
-                        <th className="categoryTableCell">Acciones</th>
+                        <th scope="col" className="categoryTableCell">Categoría</th>
+                        <th scope="col" className="categoryTableCell">Slug</th>
+                        <th scope="col" className="categoryTableCell">Proyectos</th>
+                        <th scope="col" className="categoryTableCell">Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody className="categoryTableBody">
                     {categories.map((category) => (
                         <tr key={category.id} className="categoryTableRow">
-                            <td className="categoryTableCell">{category.id}</td>
-                            <td className="categoryTableCell">{category.slug}</td>
                             <td className="categoryTableCell">{category.name}</td>
+                            <td className="categoryTableCell">{category.slug}</td>
+                            <td className="categoryTableCell">{category.projectsCount ?? 0}</td>
                             <td className="categoryTableCell">
                                 <div className="actions">
                                     <button onClick={() => onEdit(category)} className="actionBtn">

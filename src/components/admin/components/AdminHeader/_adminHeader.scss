@@ -1,52 +1,151 @@
 @use '../../../../styles/variables' as *;
 
-.header {
+.adminHeader {
     position: sticky;
     top: 0;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 100%;
-    padding: 1rem 2rem;
-    gap: 4rem;
-    background-color: $primary-color;
     z-index: 1000;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 76px;
+    padding: .75rem clamp(1rem, 4vw, 3.5rem);
+    border-bottom: 1px solid rgba($border-color-rgb, .18);
+    background: rgba($primary-color-rgb, .92);
+    backdrop-filter: blur(16px);
 
-    .header-links {
+    .adminBrand {
+        display: inline-flex;
+        align-items: center;
+        gap: .65rem;
+        width: fit-content;
+        color: $color-text;
+        font-family: Georgia, serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+
+        small {
+            display: block;
+            margin-top: .1rem;
+            color: $color-text-secondary;
+            font-family: Inter, sans-serif;
+            font-size: .56rem;
+            font-weight: 600;
+            letter-spacing: .2em;
+        }
+    }
+
+    .adminBrandMark {
+        display: grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: .7rem;
+        background: $color-accent;
+        color: $primary-color;
+        font-family: Georgia, serif;
+        font-size: 1.3rem;
+    }
+
+    .adminNavigation {
+        min-width: 0;
+
+        .adminNavLinks {
+            display: flex;
+            align-items: center;
+            gap: .3rem;
+            padding: .3rem;
+            border: 1px solid rgba($border-color-rgb, .18);
+            border-radius: .8rem;
+            background: rgba($color-button-secondary-rgb, .58);
+
+            .link {
+                padding: .65rem .9rem;
+                border-radius: .55rem;
+                color: $color-text-secondary;
+                font-size: .9rem;
+                text-decoration: none;
+                white-space: nowrap;
+                transition: background-color .2s ease, color .2s ease;
+
+                &::after {
+                    display: none;
+                }
+
+                &:hover {
+                    color: $color-text;
+                }
+
+                &.is-active {
+                    background: $color-button;
+                    color: $primary-color;
+                    box-shadow: 0 2px 8px rgba($color-text-rgb, .12);
+                }
+            }
+        }
+    }
+
+    .adminHeaderActions {
         display: flex;
-        gap: 2rem;
+        align-items: center;
+        justify-content: flex-end;
+        gap: .85rem;
     }
 
-.header-link {
-    position: relative;
-    text-decoration: none;
-    color: $color-text-secondary;
-    text-align: center;
+    .adminViewSite {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        color: $color-text-secondary;
+        font-size: .85rem;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: color .2s ease;
 
-    &::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 100%;
-        width: 100%;
-        height: 1px;
-        background-color: $color-hover-secondary;
-
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.4s ease;
-    }
-
-    &:hover::after {
-        transform: scaleX(1);
+        &:hover {
+            color: $color-accent;
+        }
     }
 }
 
-    .name {
-        font-family: "DM Serif Display", Georgia, serif;
-        font-weight: $font-weight-bold;
-        font-size: $font-size-large;
-        line-height: 32px;
+@media (max-width: 900px) {
+    .adminHeader {
+        grid-template-columns: 1fr auto;
+        gap: .75rem 1rem;
+
+        .adminNavigation {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            overflow-x: auto;
+
+            .adminNavLinks {
+                width: max-content;
+                max-width: 100%;
+            }
+        }
+
+        .adminHeaderActions {
+            grid-column: 2;
+            grid-row: 1;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .adminHeader {
+        .adminViewSite {
+            font-size: 0;
+
+            span {
+                font-size: 1rem;
+            }
+        }
+
+        .adminNavLinks .link {
+            padding: .6rem .7rem;
+            font-size: .82rem;
+        }
     }
 }

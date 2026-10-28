@@ -4,6 +4,7 @@ import { ProjectForm } from "@/components/admin/components/ui/ProjectForm/Projec
 import { useProjectBySlugQuery } from "@/hooks/project/useProjectBySlugQuery";
 import { useCategoriesQuery } from "@/hooks/category/useCategoriesQuery";
 import { useClientsQuery } from "@/hooks/client/useClientsQuery";
+import Link from "next/link";
 
 interface Props {
     slug: string;
@@ -32,7 +33,7 @@ export default function EditProjectPageClient({ slug }: Props) {
     } = useClientsQuery();
 
     if (loadingProject || loadingCategories || loadingClients) {
-        return <p>Cargando datos...</p>;
+        return <div className="projectFormState" role="status"><span className="loadingMark" aria-hidden="true" />Cargando datos del proyecto…</div>;
     }
 
     if (errorProject || errorCategories || errorClients) {
@@ -41,11 +42,11 @@ export default function EditProjectPageClient({ slug }: Props) {
             (categoriesError as Error)?.message ||
             (clientsError as Error)?.message ||
             "Error al cargar datos";
-        return <p>{message}</p>;
+        return <div className="projectFormState projectFormState--error" role="alert">{message}</div>;
     }
 
     if (!project) {
-        return <div>Proyecto no encontrado</div>;
+        return <div className="projectFormState">No encontramos ese proyecto. <Link href="/dashboard/projects">Volver a proyectos</Link></div>;
     }
 
     const projectFormValues = {

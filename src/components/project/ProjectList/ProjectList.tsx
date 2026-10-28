@@ -8,10 +8,11 @@ import './_projectList.scss'
 interface Props {
     projects: Project[];
     selectedClientParam?: string | null;
+    selectedPageParam?: number;
     priorityImages?: boolean;
 }
 
-export const ProjectList = ({ projects, selectedClientParam = null, priorityImages = false }: Props) => {
+export const ProjectList = ({ projects, selectedClientParam = null, selectedPageParam = 1, priorityImages = false }: Props) => {
     const { t } = useLanguage();
 
     if (projects.length === 0) {
@@ -26,10 +27,12 @@ export const ProjectList = ({ projects, selectedClientParam = null, priorityImag
         <div className="projectsContainer">
             {projects.map((project, index) => (
                 <ProjectCard
-                    key={project.slug + index}
+                    key={project.id}
                     project={project}
                     selectedClientParam={selectedClientParam}
+                    selectedPageParam={selectedPageParam}
                     priority={priorityImages && index < 2}
+                    featuredLayout={index === 0}
                 />
             ))}
         </div>

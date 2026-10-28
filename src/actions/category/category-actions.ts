@@ -2,8 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
+import { requireDashboardAuth } from '@/lib/auth/dashboard';
 
 export async function createCategory(formData: FormData) {
+    await requireDashboardAuth();
     const name = String(formData.get('name') ?? '').trim();
     const slug = String(formData.get('slug') ?? '').trim();
 
@@ -33,6 +35,7 @@ export async function createCategory(formData: FormData) {
 }
 
 export async function updatedCategory(formData: FormData) {
+    await requireDashboardAuth();
     const id = String(formData.get('id') ?? '');
     const name = String(formData.get('name') ?? '').trim();
     const slug = String(formData.get('slug') ?? '').trim();
@@ -65,6 +68,7 @@ export async function updatedCategory(formData: FormData) {
 }
 
 export async function deleteCategory(formData: FormData) {
+    await requireDashboardAuth();
     const id = String(formData.get('id') ?? '');
 
     if (!id) {

@@ -10,7 +10,9 @@ export const getLinksByLocale = (locale: AppLocale) => [
 export const links = getLinksByLocale(defaultLocale);
 
 export const adminLinks = [
+    { link: '/dashboard', title: 'Resumen' },
+    { link: '/dashboard/home', title: 'Inicio' },
     { link: '/dashboard/projects', title: 'Proyectos' },
-    { link: '/dashboard/categories', title: 'Categorias' },
+    { link: '/dashboard/categories', title: 'Categorías' },
     { link: '/dashboard/clients', title: 'Clientes' },
 ]

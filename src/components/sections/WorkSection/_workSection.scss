@@ -22,3 +22,34 @@
         }
     }
 }
+
+.workMoreProjects {
+    width: 100%;
+
+    > h3 {
+        margin: 1rem .5rem 1.5rem;
+        color: $color-text-secondary;
+        font-size: $font-size-small;
+        font-weight: $font-weight-bold;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+    }
+}
+
+.workAllProjectsLink {
+    display: inline-flex;
+    align-items: center;
+    gap: .75rem;
+    min-height: 3rem;
+    padding: 0 1.25rem;
+    border: 1px solid rgba($border-color-rgb, .3);
+    border-radius: 999px;
+    color: $color-text;
+    text-decoration: none;
+    transition: border-color .2s ease, color .2s ease;
+
+    &:hover {
+        border-color: $color-accent;
+        color: $color-accent;
+    }
+}

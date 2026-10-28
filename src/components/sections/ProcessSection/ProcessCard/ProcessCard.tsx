@@ -5,11 +5,12 @@ interface Props {
   title: string;
   description: string;
   icon: React.ReactElement;
+  active?: boolean;
 }
 
-export const ProcessCard = ({ number, title, description, icon }: Props) => {
+export const ProcessCard = ({ number, title, description, icon, active = false }: Props) => {
   return (
-    <div className='processCard'>
+    <div className={`processCard${active ? ' is-active' : ''}`}>
       <div className='processCardHeader'>
         <div className='processIcon'>
           {icon}

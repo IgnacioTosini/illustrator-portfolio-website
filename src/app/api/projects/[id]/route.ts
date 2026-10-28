@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
 import { updateProject, deleteProjectById } from "@/actions/project/project-actions";
+import { isDashboardAuthenticated } from "@/lib/auth/dashboard";
 
 export async function PUT(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await isDashboardAuthenticated()) {
+        return NextResponse.json({ message: "No autorizado" }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         const body = await req.json();
@@ -20,6 +25,10 @@ export async function DELETE(
     _req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!await isDashboardAuthenticated()) {
+        return NextResponse.json({ message: "No autorizado" }, { status: 401 });
+    }
+
     try {
         const { id } = await params;
         console.log("Deleting project with id:", id);

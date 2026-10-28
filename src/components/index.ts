@@ -12,4 +12,5 @@ export * from './sections/ContactSection/ContactSection'
 
 export * from './ui/Title/Title'
 export * from './ui/Links/Links'
+export * from './ui/Pagination/Pagination'
 export * from './ui/SocialMedias/SocialMedias'

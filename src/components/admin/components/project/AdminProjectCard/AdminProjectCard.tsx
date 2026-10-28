@@ -36,9 +36,9 @@ export default function AdminProjectCard({ project }: Props) {
   };
 
   return (
-    <article className="projectCard" >
-      <picture className='projectCardImageContainer'>
-        {project.images?.[0].url && (
+    <article className="projectCard">
+      <div className='projectCardImageContainer'>
+        {project.images?.[0]?.url ? (
           <Image
             src={project.images[0].url}
             alt={project.images[0].alt || project.title}
@@ -46,28 +46,29 @@ export default function AdminProjectCard({ project }: Props) {
             height={400}
             className='projectCardImage'
           />
-        )}
-        <div className='projectCardContent'>
-          <h3>{project.title}</h3>
-          <p>{project.client?.name || 'Personal'}</p>
+        ) : <div className="projectCardImagePlaceholder">{project.title.slice(0, 1)}</div>}
+        {project.featured && <span className="projectFeaturedBadge">Destacado</span>}
+      </div>
+      <div className="projectCardDetails">
+        <div className="projectCardHeading">
+          <div>
+            <h2>{project.title}</h2>
+            <p>{project.client?.name || 'Personal'} <span aria-hidden="true">·</span> {project.category?.name}</p>
+          </div>
+          <span className="projectCardYear">{project.year}</span>
         </div>
-
-        <div className='projectCardOverlay'>
-          <Link href={`/dashboard/projects/${project.slug}`} className='overlayButton'>
-            Editar
-          </Link>
+        <div className="projectCardActions">
+          <Link href={`/dashboard/projects/${project.slug}`} className="projectEditAction">Editar proyecto <span aria-hidden="true">↗</span></Link>
           <button
             type="button"
-            className='overlayButton overlayButton--danger'
+            className="projectDeleteAction"
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
           >
-            {isPending ? 'Eliminando...' : 'Eliminar'}
+            {isPending || deleteMutation.isPending ? 'Eliminando…' : 'Eliminar'}
           </button>
         </div>
-      </picture>
-      <h3>{project.title}</h3>
-      <p>{project.client?.name || 'Personal'}</p>
+      </div>
     </article>
   )
 }

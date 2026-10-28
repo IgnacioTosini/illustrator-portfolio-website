@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { toSlug } from '@/lib/utils';
+import { requireDashboardAuth } from '@/lib/auth/dashboard';
 
 const getUniqueClientSlug = async (name: string, excludeClientId?: string): Promise<string> => {
     const baseSlug = toSlug(name) || 'cliente';
@@ -28,6 +29,7 @@ const getUniqueClientSlug = async (name: string, excludeClientId?: string): Prom
 };
 
 export async function createClient(formData: FormData) {
+    await requireDashboardAuth();
     const name = String(formData.get('name') ?? '').trim();
     const website = String(formData.get('website') ?? '').trim();
 
@@ -56,6 +58,7 @@ export async function createClient(formData: FormData) {
 }
 
 export async function updatedClient(formData: FormData) {
+    await requireDashboardAuth();
     const id = String(formData.get('id') ?? '');
     const name = String(formData.get('name') ?? '').trim();
     const website = String(formData.get('website') ?? '').trim();
@@ -86,6 +89,7 @@ export async function updatedClient(formData: FormData) {
 }
 
 export async function deleteClient(formData: FormData) {
+    await requireDashboardAuth();
     const id = String(formData.get('id') ?? '');
 
     if (!id) {

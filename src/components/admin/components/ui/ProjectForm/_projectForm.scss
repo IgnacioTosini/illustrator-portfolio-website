@@ -1,189 +1,451 @@
 @use '../../../../../styles/variables' as *;
-@use 'sass:color';
+
+.projectFormState {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    width: min(100%, 1200px);
+    margin: 0 auto;
+    padding: 1.25rem;
+    border: 1px solid rgba($border-color-rgb, .2);
+    border-radius: .85rem;
+    background: $color-button-secondary;
+    color: $color-text-secondary;
+
+    a {
+        color: $color-accent;
+        text-decoration: none;
+    }
+
+    &--error { color: $color-error; }
+
+    .loadingMark {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid rgba($color-accent-rgb, .2);
+        border-top-color: $color-accent;
+        border-radius: 50%;
+        animation: projectFormSpin .7s linear infinite;
+    }
+}
+
+@keyframes projectFormSpin {
+    to { transform: rotate(360deg); }
+}
 
 .projectForm {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: start;
-    gap: 1.5rem 2rem;
+    gap: 1.25rem 1.5rem;
     width: 100%;
     max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(1.25rem, 3vw, 2.25rem);
+    border: 1px solid rgba($border-color-rgb, .2);
+    border-radius: 1.1rem;
+    background: $color-button-secondary;
+    box-shadow: 0 18px 56px rgba($color-text-rgb, .06);
+
+    .projectFormHeader,
+    .formSection,
+    .field--full,
+    .newImagesSection,
+    .submitRow {
+        grid-column: 1 / -1;
+    }
+
+    .projectFormHeader {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid rgba($border-color-rgb, .17);
+
+        .formEyebrow {
+            color: $color-accent;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .18em;
+        }
+
+        h1 {
+            margin-top: .5rem;
+            color: $color-text;
+            font-family: Georgia, serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 500;
+            letter-spacing: -.04em;
+        }
+
+        p {
+            margin-top: .45rem;
+            color: $color-text-secondary;
+            font-size: .88rem;
+        }
+
+        .editingProjectName {
+            max-width: 40%;
+            overflow: hidden;
+            padding: .5rem .75rem;
+            border: 1px solid rgba($border-color-rgb, .2);
+            border-radius: 999px;
+            color: $color-text-secondary;
+            font-size: .78rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .formSection {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.1rem 0 .35rem;
+
+        & + .formSection {
+            border-top: 1px solid rgba($border-color-rgb, .16);
+        }
+    }
+
+    .formSectionHeading {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+
+        > span {
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: .55rem;
+            background: rgba($color-accent-rgb, .12);
+            color: $color-accent;
+            font-size: .7rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: $color-text;
+            font-family: Georgia, serif;
+            font-size: 1.18rem;
+            font-weight: 500;
+        }
+
+        p {
+            margin-top: .2rem;
+            color: $color-text-secondary;
+            font-size: .77rem;
+            line-height: 1.45;
+        }
+    }
+
+    .formSectionGrid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+        gap: 1rem 1.25rem;
+    }
 
     .field {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: .55rem;
         min-width: 0;
+
+        > label {
+            color: $color-text;
+            font-size: .84rem;
+            font-weight: 600;
+        }
+
+        input:not([type='checkbox']),
+        textarea,
+        select {
+            width: 100%;
+            min-height: 2.9rem;
+            padding: .7rem .8rem;
+            border: 1px solid rgba($border-color-rgb, .25);
+            border-radius: .65rem;
+            background: $primary-color;
+            color: $color-text;
+            font: inherit;
+            font-size: .9rem;
+            outline: none;
+            transition: border-color .2s ease, box-shadow .2s ease;
+
+            &:focus {
+                border-color: $color-accent;
+                box-shadow: 0 0 0 3px rgba($color-accent-rgb, .13);
+            }
+
+            &[aria-invalid='true'] {
+                border-color: $color-error;
+            }
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+            line-height: 1.55;
+        }
+
+        select {
+            appearance: auto;
+        }
+
+        input[type='checkbox'] {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: $color-accent;
+        }
     }
 
-    .field--full {
-        grid-column: 1 / -1;
+    .fieldHint {
+        color: $color-text-secondary;
+        font-size: .74rem;
+        line-height: 1.4;
     }
 
     .field--checkbox {
         justify-content: flex-end;
-        padding-bottom: 0.5rem;
-    }
 
-    label {
-        font-size: 0.75rem;
-        letter-spacing: 0.15em;
-        font-weight: 500;
-        color: $color-text-secondary;
-    }
+        .checkLabel {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            min-height: 2.9rem;
+            padding: .65rem .8rem;
+            border: 1px solid rgba($border-color-rgb, .2);
+            border-radius: .65rem;
+            background: $primary-color;
+            cursor: pointer;
 
-    input,
-    textarea,
-    select {
-        width: 100%;
-        background: transparent;
-        border: none;
-        border-bottom: 1px solid $border-color;
-        padding: 0.75rem 0;
-        font-size: $font-size-medium;
-        color: $color-text;
-        outline: none;
-        transition: border-color .3s ease;
-    }
+            strong,
+            small {
+                display: block;
+            }
 
-    textarea {
-        resize: none;
-        min-height: 120px;
-    }
+            strong {
+                color: $color-text;
+                font-size: .83rem;
+            }
 
-    select {
-        appearance: none;
-    }
-
-    .checkLabel {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        letter-spacing: 0.08em;
-    }
-
-    .checkLabel input {
-        width: auto;
-        margin: 0;
-        accent-color: $color-instagram;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus {
-        border-bottom: 1px solid $color-instagram;
+            small {
+                margin-top: .2rem;
+                color: $color-text-secondary;
+                font-size: .72rem;
+                font-weight: 400;
+                letter-spacing: 0;
+            }
+        }
     }
 
     .fileInput {
-        border: 1px dashed $border-color;
-        border-radius: 0.5rem;
-        padding: 0.75rem;
+        min-height: auto !important;
+        padding: .85rem !important;
+        border: 1px dashed rgba($border-color-rgb, .4) !important;
+        background: rgba($color-accent-rgb, .035) !important;
         cursor: pointer;
+    }
+
+    .existingImagesGroup,
+    .newImagesSection {
+        display: flex;
+        flex-direction: column;
+        gap: .8rem;
+        padding-top: .25rem;
+    }
+
+    .existingImagesGroup > h3,
+    .newImagesSection > h3 {
+        display: flex;
+        align-items: center;
+        gap: .55rem;
+        color: $color-text;
+        font-size: .9rem;
+        font-weight: 600;
+
+        span {
+            display: inline-grid;
+            place-items: center;
+            min-width: 1.5rem;
+            height: 1.5rem;
+            padding: 0 .35rem;
+            border-radius: 999px;
+            background: rgba($color-accent-rgb, .12);
+            color: $color-accent;
+            font-size: .72rem;
+        }
     }
 
     .previewGrid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 1rem;
-    }
-
-    .newImagesSection {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+        gap: .8rem;
     }
 
     .previewCard {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border: 1px solid $border-color;
-        border-radius: 0.75rem;
         overflow: hidden;
+        border: 1px solid rgba($border-color-rgb, .2);
+        border-radius: .75rem;
+        background: $primary-color;
+    }
+
+    .imageCropPreview {
+        position: relative;
+        display: block;
+        width: 100%;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        background: transparent;
+        cursor: zoom-in;
+
+        .previewImage {
+            transition: transform .25s ease;
+        }
+
+        &:hover .previewImage {
+            transform: scale(1.035);
+        }
+
+        .cropPreviewAction {
+            position: absolute;
+            right: .5rem;
+            bottom: .5rem;
+            left: .5rem;
+            padding: .5rem;
+            border: 1px solid rgba($primary-color-rgb, .24);
+            border-radius: .5rem;
+            background: rgba($primary-color-rgb, .88);
+            color: $color-text;
+            font-size: .72rem;
+            font-weight: 600;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
     }
 
     .previewImage {
+        display: block;
         width: 100%;
-        height: 160px;
+        height: 150px;
         object-fit: cover;
-        border-radius: 0.5rem 0.5rem 0 0;
-    }
-
-    .submitRow {
-        grid-column: 1 / -1;
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 0.5rem;
-        gap: 1rem;
-    }
-
-    button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: .5rem;
-        width: fit-content;
-        background-color: $color-button;
-        color: $primary-color;
-        border: 1px solid $border-color;
-        padding: 0.75rem 1.5rem;
-        font-size: $font-size-medium;
-        cursor: pointer;
-        transition: all .3s ease-in-out;
-
-        &:hover {
-            background-color: $color-hover-primary;
-            color: $color-text;
-            border-color: $border-color;
-        }
     }
 
     .removeButton {
-        background-color: $color-error;
-        color: #fff;
-        border-color: $color-error;
-        text-align: center;
         width: 100%;
+        min-height: 2.4rem;
+        border: 0;
+        border-top: 1px solid rgba($border-color-rgb, .16);
+        background: transparent;
+        color: $color-error;
+        font-size: .78rem;
+        cursor: pointer;
 
         &:hover {
-            background-color: color.adjust($color-error, $lightness: -10%);
-            border-color: color.adjust($color-error, $lightness: -10%);
+            background: rgba($color-error, .08);
         }
+    }
+
+    .noImagesMessage {
+        color: $color-text-secondary;
+        font-size: .82rem;
+    }
+
+    .submitRow {
+        position: sticky;
+        bottom: 0;
+        display: flex;
+        justify-content: flex-end;
+        gap: .7rem;
+        margin: .5rem calc(clamp(1.25rem, 3vw, 2.25rem) * -1) calc(clamp(1.25rem, 3vw, 2.25rem) * -1);
+        padding: 1rem clamp(1.25rem, 3vw, 2.25rem);
+        border-top: 1px solid rgba($border-color-rgb, .18);
+        border-radius: 0 0 1.1rem 1.1rem;
+        background: rgba($color-button-secondary-rgb, .94);
+        backdrop-filter: blur(12px);
+    }
+
+    .submitRow button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.8rem;
+        padding: 0 1.1rem;
+        border: 1px solid rgba($border-color-rgb, .25);
+        border-radius: .65rem;
+        background: transparent;
+        color: $color-text;
+        font: inherit;
+        font-size: .88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+
+        &:disabled {
+            cursor: wait;
+            opacity: .6;
+        }
+    }
+
+    .submitRow .saveButton {
+        border-color: $color-button;
+        background: $color-button;
+        color: $primary-color;
+
+        &:hover:not(:disabled) {
+            border-color: $color-accent;
+            background: $color-accent;
+        }
+    }
+
+    .submitRow .cancelButton:hover:not(:disabled) {
+        border-color: $color-accent;
+        color: $color-accent;
     }
 
     .error {
-        font-size: 0.75rem;
         color: $color-error;
-        margin-top: 0.25rem;
-        animation: fadeIn .2s ease;
+        font-size: .76rem;
+        line-height: 1.4;
     }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-4px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @media (max-width: 900px) {
+    @media (max-width: 700px) {
         grid-template-columns: 1fr;
+        gap: 1rem;
 
+        .projectFormHeader,
+        .formSection,
         .field--full,
+        .newImagesSection,
         .submitRow {
             grid-column: auto;
         }
 
-        .field--checkbox {
-            padding-bottom: 0;
+        .projectFormHeader {
+            align-items: flex-start;
+            flex-direction: column;
+
+            .editingProjectName { max-width: 100%; }
+        }
+
+        .formSectionGrid {
+            grid-template-columns: 1fr;
         }
 
         .submitRow {
-            justify-content: flex-start;
+            position: static;
+            margin: 0 -1.25rem -1.25rem;
+            padding: .9rem 1.25rem;
+            border-radius: 0 0 1.1rem 1.1rem;
         }
     }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .projectForm * { transition: none !important; }
 }

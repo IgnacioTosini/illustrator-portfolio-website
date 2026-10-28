@@ -10,7 +10,6 @@ export default async function EditProjectPage({ params }: Props) {
 
     return (
         <div className="editProjectPage">
-            <h1>Editar Proyecto</h1>
             <EditProjectPageClient slug={slug} />
         </div>
     );

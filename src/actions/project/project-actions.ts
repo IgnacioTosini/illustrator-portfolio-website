@@ -8,6 +8,12 @@ import { revalidatePath } from "next/cache";
 import { toSlug } from "@/lib/utils";
 import { deleteProjectImagesFromCloudinary, uploadImages } from "@/lib/services";
 import { randomUUID } from "node:crypto";
+import { requireDashboardAuth } from "@/lib/auth/dashboard";
+import type { Prisma } from "@prisma/client";
+
+type ProjectWithRelations = Prisma.ProjectGetPayload<{
+    include: { images: true; category: true; client: true };
+}>;
 
 const getUniqueClientSlugInTx = async (
     tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
@@ -98,7 +104,16 @@ const resolveClientIdInTx = async (
     return existingClient.id;
 };
 
+const cleanupCloudinaryImages = async (images: { url: string }[]) => {
+    try {
+        await deleteProjectImagesFromCloudinary(images.map((image) => image.url));
+    } catch (error) {
+        console.error('No se pudieron limpiar imágenes de Cloudinary:', error);
+    }
+};
+
 export const updateProject = async (id: string, updatedData: ProjectUpdateInput): Promise<Project> => {
+    await requireDashboardAuth();
     const project = await prisma.project.findFirst({
         where: { id },
         include: {
@@ -125,51 +140,57 @@ export const updateProject = async (id: string, updatedData: ProjectUpdateInput)
 
     const imagesToDelete = project.images.filter((img) => !keepSet.has(img.id));
 
-    if (imagesToDelete.length > 0) {
-        await deleteProjectImagesFromCloudinary(imagesToDelete.map((img) => img.url));
-    }
-
     const uploadedImages = await uploadImages(updatedData.images ?? []);
 
-    const updatedProject = await prisma.$transaction(async (tx) => {
-        const categoryId = await resolveCategoryIdInTx(tx, updatedData.categoryId, updatedData.newCategoryName);
-        const clientId = await resolveClientIdInTx(tx, updatedData.clientId, updatedData.newClientName);
+    let updatedProject: ProjectWithRelations;
+    try {
+        updatedProject = await prisma.$transaction(async (tx) => {
+            const categoryId = await resolveCategoryIdInTx(tx, updatedData.categoryId, updatedData.newCategoryName);
+            const clientId = await resolveClientIdInTx(tx, updatedData.clientId, updatedData.newClientName);
 
-        if (!categoryId || !clientId) {
-            throw new Error('Categoría y cliente son obligatorios');
-        }
+            if (!categoryId || !clientId) {
+                throw new Error('Categoría y cliente son obligatorios');
+            }
 
-        return tx.project.update({
-            where: { id },
-            data: {
-                title: updatedData.title,
-                slug: updatedData.slug,
-                description: updatedData.description,
-                year: updatedData.year,
-                featured: updatedData.featured,
-                categoryId,
-                clientId,
-                images: {
-                    deleteMany: {
-                        id: { in: imagesToDelete.map((img) => img.id) },
+            return tx.project.update({
+                where: { id },
+                data: {
+                    title: updatedData.title,
+                    slug: updatedData.slug,
+                    description: updatedData.description,
+                    year: updatedData.year,
+                    featured: updatedData.featured,
+                    categoryId,
+                    clientId,
+                    images: {
+                        deleteMany: {
+                            id: { in: imagesToDelete.map((img) => img.id) },
+                        },
+                        create: uploadedImages.map((image) => ({
+                            id: randomUUID(),
+                            url: image.url,
+                            order: image.order,
+                            alt: image.alt ?? undefined,
+                        })),
                     },
-                    create: uploadedImages.map((image) => ({
-                        id: randomUUID(),
-                        url: image.url,
-                        order: image.order,
-                        alt: image.alt ?? undefined,
-                    })),
                 },
-            },
-            include: { images: true, category: true, client: true },
+                include: { images: true, category: true, client: true },
+            });
         });
-    });
+
+    } catch (error) {
+        await cleanupCloudinaryImages(uploadedImages);
+        throw error;
+    }
+
+    if (imagesToDelete.length) await cleanupCloudinaryImages(imagesToDelete);
     revalidatePath('/dashboard/projects')
     return mapProject(updatedProject);
 }
 
 export const addProject = async (projectData: ProjectCreateInput): Promise<Project> => {
     try {
+        await requireDashboardAuth();
         const validatedData = await createProjectSchema.validate(projectData, {
             abortEarly: false,
             stripUnknown: true
@@ -180,40 +201,46 @@ export const addProject = async (projectData: ProjectCreateInput): Promise<Proje
         }
         const uploadedImages = await uploadImages(validatedData.images ?? []);
 
-        const project = await prisma.$transaction(async (tx) => {
-            const categoryId = await resolveCategoryIdInTx(tx, validatedData.categoryId, validatedData.newCategoryName);
-            const clientId = await resolveClientIdInTx(tx, validatedData.clientId, validatedData.newClientName);
+        let project: ProjectWithRelations;
+        try {
+            project = await prisma.$transaction(async (tx) => {
+                const categoryId = await resolveCategoryIdInTx(tx, validatedData.categoryId, validatedData.newCategoryName);
+                const clientId = await resolveClientIdInTx(tx, validatedData.clientId, validatedData.newClientName);
 
-            if (!categoryId || !clientId) {
-                throw new Error('Categoría y cliente son obligatorios');
-            }
-
-            return tx.project.create({
-                data: {
-                    id: validatedData.id,
-                    title: validatedData.title,
-                    slug: validatedData.slug,
-                    description: validatedData.description,
-                    year: validatedData.year,
-                    featured: validatedData.featured,
-                    categoryId,
-                    clientId,
-                    images: {
-                        create: uploadedImages.map((image) => ({
-                            id: image.id,
-                            url: image.url,
-                            alt: image.alt ?? undefined,
-                            order: image.order,
-                        }))
-                    }
-                },
-                include: {
-                    images: true,
-                    category: true,
-                    client: true
+                if (!categoryId || !clientId) {
+                    throw new Error('Categoría y cliente son obligatorios');
                 }
+
+                return tx.project.create({
+                    data: {
+                        id: validatedData.id,
+                        title: validatedData.title,
+                        slug: validatedData.slug,
+                        description: validatedData.description,
+                        year: validatedData.year,
+                        featured: validatedData.featured,
+                        categoryId,
+                        clientId,
+                        images: {
+                            create: uploadedImages.map((image) => ({
+                                id: image.id,
+                                url: image.url,
+                                alt: image.alt ?? undefined,
+                                order: image.order,
+                            }))
+                        }
+                    },
+                    include: {
+                        images: true,
+                        category: true,
+                        client: true
+                    }
+                });
             });
-        });
+        } catch (error) {
+            await cleanupCloudinaryImages(uploadedImages);
+            throw error;
+        }
 
         revalidatePath('/dashboard/projects')
         return mapProject(project);
@@ -225,6 +252,7 @@ export const addProject = async (projectData: ProjectCreateInput): Promise<Proje
 }
 
 export const deleteProjectById = async (id: string): Promise<void> => {
+    await requireDashboardAuth();
     const project = await prisma.project.findUnique({
         where: { id },
         include: {
@@ -240,9 +268,7 @@ export const deleteProjectById = async (id: string): Promise<void> => {
         throw new Error(`Proyecto con id ${id} no encontrado`);
     }
 
-    const imageUrls = project.images.map((image) => image.url);
-    await deleteProjectImagesFromCloudinary(imageUrls);
-
     await prisma.project.delete({ where: { id } });
+    await cleanupCloudinaryImages(project.images);
     revalidatePath('/dashboard/projects');
 };

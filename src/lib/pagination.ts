@@ -1,0 +1,2 @@
+export const PUBLIC_PROJECTS_PAGE_SIZE = 9;
+export const ADMIN_PROJECTS_PAGE_SIZE = 12;

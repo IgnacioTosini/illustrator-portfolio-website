@@ -26,7 +26,7 @@
   --color-hover-secondary-rgb: 3, 3, 3;
   --color-accent-rgb: 182, 74, 90;
 
-  --anchor-offset: 7rem;
+  --anchor-offset: 4.75rem;
 }
 
 .dark {
@@ -98,7 +98,7 @@ textarea:focus-visible {
 
 @media (max-width: 768px) {
   :root {
-    --anchor-offset: 9rem;
+    --anchor-offset: 5rem;
   }
 }
 
@@ -106,7 +106,6 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: pageReveal 0.45s ease both;
 }
 
 .worksPage,

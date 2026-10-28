@@ -9,7 +9,7 @@ const siteUrl = getSiteUrl();
 
 interface Props {
     params: Promise<{ slug: string }>
-    searchParams: Promise<{ client?: string | string[] }>
+    searchParams: Promise<{ client?: string | string[]; page?: string | string[] }>
 }
 
 export async function generateMetadata(
@@ -48,8 +48,10 @@ export async function generateMetadata(
 
 export default async function WorkPage({ params, searchParams }: Props) {
     const { slug } = await params;
-    const { client } = await searchParams;
+    const { client, page } = await searchParams;
     const selectedClientParam = typeof client === 'string' ? client : null;
+    const pageValue = typeof page === 'string' ? Number(page) : 1;
+    const selectedPageParam = Number.isInteger(pageValue) && pageValue > 1 ? pageValue : 1;
     const project = await getProjectBySlug(slug)
 
     if (!project) {
@@ -58,7 +60,7 @@ export default async function WorkPage({ params, searchParams }: Props) {
 
     return (
         <div className="workPage">
-            <ProjectGallery project={project} selectedClientParam={selectedClientParam} />
+            <ProjectGallery project={project} selectedClientParam={selectedClientParam} selectedPageParam={selectedPageParam} />
         </div>
     );
 }

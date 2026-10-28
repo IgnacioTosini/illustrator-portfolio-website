@@ -84,6 +84,20 @@ export const animateAboutSection = (aboutElement: HTMLElement) => {
                 },
                 "-=0.2"
             );
+        gsap.fromTo(
+            ".aboutSectionContent img",
+            { yPercent: 4 },
+            {
+                yPercent: -4,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: aboutElement,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: 0.7,
+                },
+            }
+        );
     }, aboutElement);
 
     return () => ctx.revert();
