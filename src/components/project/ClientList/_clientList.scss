@@ -20,6 +20,10 @@
     }
 }
 
+.mobileClientFilterTrigger {
+    display: none;
+}
+
 .clientList {
     display: flex;
     align-items: center;
@@ -35,7 +39,15 @@
     white-space: nowrap;
     scroll-snap-type: x proximity;
 
+    > li {
+        flex: 0 0 auto;
+        margin: 0;
+        padding: 0;
+    }
+
     .client {
+        position: relative;
+        isolation: isolate;
         flex: 0 0 auto;
         padding: .6rem .75rem;
         min-height: 2.75rem;
@@ -46,8 +58,26 @@
         border: 1px solid transparent;
         border-radius: .55rem;
         cursor: pointer;
+        font: inherit;
+        color: $color-text-secondary;
         transition: border-color .3s ease-in-out, background-color .3s ease-in-out, color .3s ease-in-out;
         scroll-snap-align: start;
+
+        .clientLabel,
+        .clientStatus {
+            position: relative;
+            z-index: 1;
+        }
+
+        .clientActiveIndicator {
+            position: absolute;
+            z-index: 0;
+            inset: -1px;
+            border: 1px solid $color-button;
+            border-radius: .55rem;
+            background: $color-button;
+            pointer-events: none;
+        }
 
         &:hover {
             border-color: rgba($border-color-rgb, .28);
@@ -66,14 +96,18 @@
     }
 
     .selected {
-        background-color: $color-button;
+        background-color: transparent;
         color: $primary-color;
-        border-color: $color-button;
+        border-color: transparent;
 
         // Keep the active chip readable when the pointer is over it in both themes.
         &:hover {
-            background-color: $color-button;
+            background-color: transparent;
             color: $primary-color;
+            box-shadow: none;
+        }
+
+        &:hover .clientActiveIndicator {
             border-color: $color-accent;
             box-shadow: 0 0 0 2px rgba($color-accent-rgb, .16);
         }
@@ -94,4 +128,234 @@
 .clientStatus {
     font-size: $font-size-xsmall;
     color: $color-text-secondary;
+}
+
+.mobileClientFilterOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2500;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    background: rgba($color-button-rgb, .58);
+    backdrop-filter: blur(8px);
+}
+
+.mobileClientFilterSheet {
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 600px);
+    max-height: min(88dvh, 760px);
+    padding: 1.35rem 1.25rem max(1rem, env(safe-area-inset-bottom));
+    overflow: hidden;
+    border: 1px solid rgba($border-color-rgb, .22);
+    border-bottom: 0;
+    border-radius: 1.35rem 1.35rem 0 0;
+    background: $color-button-secondary;
+    box-shadow: 0 -22px 80px rgba($color-button-rgb, .32);
+}
+
+.mobileClientFilterHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+
+    h2 {
+        margin-top: .35rem;
+        color: $color-text;
+        font-family: 'DM Serif Display', Georgia, serif;
+        font-size: 1.7rem;
+        font-weight: 400;
+        line-height: 1.1;
+    }
+}
+
+.mobileClientFilterEyebrow {
+    color: $color-accent;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+}
+
+.mobileClientFilterClose {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 2.65rem;
+    height: 2.65rem;
+    border: 1px solid rgba($border-color-rgb, .22);
+    border-radius: .8rem;
+    background: transparent;
+    color: $color-text;
+    font-size: 1.25rem;
+    cursor: pointer;
+
+    &:focus-visible { outline: 2px solid $color-accent; outline-offset: 2px; }
+}
+
+.mobileClientSearch {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    min-height: 3rem;
+    padding: 0 .9rem;
+    border: 1px solid rgba($border-color-rgb, .2);
+    border-radius: .8rem;
+    background: $primary-color;
+    color: $color-text-secondary;
+
+    input {
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: $color-text;
+        font: inherit;
+        font-size: .92rem;
+
+        &::placeholder { color: $color-text-secondary; }
+    }
+
+    &:focus-within {
+        border-color: $color-accent;
+        box-shadow: 0 0 0 3px rgba($color-accent-rgb, .13);
+    }
+}
+
+.mobileClientFilterOptions {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    min-height: 0;
+    margin: .9rem -.25rem .5rem;
+    padding: 0 .25rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+
+.mobileClientOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    min-height: 3.1rem;
+    padding: .7rem .85rem;
+    border: 1px solid transparent;
+    border-radius: .7rem;
+    background: transparent;
+    color: $color-text;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover:not(:disabled), &.is-selected {
+        border-color: rgba($color-accent-rgb, .35);
+        background: rgba($color-accent-rgb, .09);
+    }
+
+    &:disabled {
+        color: $color-text-secondary;
+        opacity: .58;
+        cursor: not-allowed;
+    }
+
+    &:focus-visible { outline: 2px solid $color-accent; outline-offset: 1px; }
+
+    small { color: $color-text-secondary; font-size: .72rem; }
+}
+
+.mobileClientOptionCheck {
+    color: $color-accent;
+    font-weight: 700;
+}
+
+.mobileClientNoResults {
+    padding: 1rem .85rem;
+    color: $color-text-secondary;
+    font-size: .9rem;
+}
+
+.mobileClientClear {
+    flex: 0 0 auto;
+    min-height: 2.9rem;
+    margin-top: .25rem;
+    border: 1px solid rgba($border-color-rgb, .24);
+    border-radius: .75rem;
+    background: rgba($color-text-rgb, .04);
+    color: $color-text;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover { border-color: $color-accent; color: $color-accent; }
+    &:focus-visible { outline: 2px solid $color-accent; outline-offset: 2px; }
+}
+
+@media (max-width: 768px) {
+    .clientListWrapper {
+        padding: 0;
+        border: 0;
+        background: transparent;
+
+        &.is-scrollable::after { display: none; }
+    }
+
+    .clientList { display: none; }
+
+    .mobileClientFilterTrigger {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        width: 100%;
+        min-height: 3.25rem;
+        padding: .65rem .9rem;
+        border: 1px solid rgba($border-color-rgb, .2);
+        border-radius: .85rem;
+        background: rgba($color-button-secondary-rgb, .42);
+        color: $color-text;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+
+        > svg { flex: 0 0 auto; color: $color-accent; font-size: 1.1rem; }
+        &:focus-visible { outline: 2px solid $color-accent; outline-offset: 2px; }
+    }
+
+    .mobileClientFilterLabel {
+        color: $color-text-secondary;
+        font-size: .84rem;
+    }
+
+    .mobileClientFilterValue {
+        min-width: 0;
+        overflow: hidden;
+        margin-left: auto;
+        color: $color-text;
+        font-size: .88rem;
+        font-weight: 600;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .mobileClientFilterDot {
+        flex: 0 0 auto;
+        width: .45rem;
+        height: .45rem;
+        border-radius: 50%;
+        background: $color-accent;
+        box-shadow: 0 0 0 3px rgba($color-accent-rgb, .12);
+    }
+
+    .clientListHint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mobileClientFilterTrigger, .mobileClientOption, .mobileClientClear { transition: none; }
 }

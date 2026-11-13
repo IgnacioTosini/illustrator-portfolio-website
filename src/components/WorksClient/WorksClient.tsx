@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Project } from "@/types";
 import { ClientList } from "@/components/project/ClientList/ClientList";
 import { ProjectList } from "@/components/project/ProjectList/ProjectList";
@@ -23,6 +24,7 @@ export default function WorksClient({ projects, totalItems, currentPage, selecte
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const { locale } = useLanguage();
+    const shouldReduceMotion = useReducedMotion();
 
     const handleSelectClient = useCallback((clientSlug: string | null) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -58,7 +60,21 @@ export default function WorksClient({ projects, totalItems, currentPage, selecte
                 onSelectClient={handleSelectClient}
             />
             <div className="worksGalleryBar">
-                <span className="totalProjects">{totalItems} {totalProjectsLabel}</span>
+                <span className="totalProjects" role="status" aria-live="polite" aria-atomic="true">
+                    <AnimatePresence mode="wait" initial={false}>
+                        <motion.span
+                            key={`${totalItems}-${locale}`}
+                            className="totalProjectsCount"
+                            initial={shouldReduceMotion ? false : { opacity: 0, y: 6, scale: .92 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={shouldReduceMotion ? undefined : { opacity: 0, y: -5, scale: .96 }}
+                            transition={shouldReduceMotion ? { duration: 0 } : { duration: .2, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                            {totalItems}
+                        </motion.span>
+                    </AnimatePresence>
+                    <span>{totalProjectsLabel}</span>
+                </span>
                 <span className="worksGalleryCue">{locale === "es" ? "Explorá cada obra" : "Explore each piece"} <span aria-hidden="true">↗</span></span>
             </div>
             <ProjectList
@@ -66,6 +82,7 @@ export default function WorksClient({ projects, totalItems, currentPage, selecte
                 selectedClientParam={selectedClient}
                 selectedPageParam={currentPage}
                 priorityImages
+                animateChanges
             />
             <Pagination
                 currentPage={currentPage}

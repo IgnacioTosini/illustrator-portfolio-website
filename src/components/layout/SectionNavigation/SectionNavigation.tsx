@@ -36,25 +36,51 @@ export function SectionNavigationProvider({ children }: { children: ReactNode })
     const pendingSectionRef = useRef<string | null>(null);
     const overlayRef = useRef<HTMLDivElement | null>(null);
     const tweenRef = useRef<gsap.core.Timeline | null>(null);
+    const alignmentFrameRef = useRef<number | null>(null);
+
+    const finishScrollEntranceAnimations = useCallback(() => {
+        ScrollTrigger.getAll().forEach((trigger) => {
+            if (!trigger.vars.once || trigger.vars.scrub || !trigger.animation) return;
+            trigger.animation.progress(1);
+        });
+    }, []);
 
     const scrollToSection = useCallback((id: string) => {
         const section = document.getElementById(id);
         if (!section && id !== "top") return false;
 
-        const headerHeight = document.querySelector<HTMLElement>(".header")?.getBoundingClientRect().height ?? 64;
-        const availableHeight = window.innerHeight - headerHeight;
-        const sectionHeight = section?.getBoundingClientRect().height ?? 0;
-        const sectionTop = (section?.getBoundingClientRect().top ?? 0) + window.scrollY;
-        const heading = section?.querySelector<HTMLElement>(".titleContainer");
-        const target = id === "top"
-            ? 0
-            : sectionHeight < availableHeight - 40
-                ? sectionTop - headerHeight - (availableHeight - sectionHeight) / 2
-                : (heading?.getBoundingClientRect().top ?? section?.getBoundingClientRect().top ?? 0) + window.scrollY - headerHeight - 28;
-        const boundedTarget = Math.max(0, Math.round(target));
-
+        if (alignmentFrameRef.current !== null) {
+            window.cancelAnimationFrame(alignmentFrameRef.current);
+            alignmentFrameRef.current = null;
+        }
         tweenRef.current?.kill();
         sectionNavigation.active = true;
+        // Pinned sections add spacer height to the document. Refresh them before
+        // measuring the destination so cross-route jumps don't land inside a pin.
+        finishScrollEntranceAnimations();
+        ScrollTrigger.refresh();
+
+        const headerHeight = document.querySelector<HTMLElement>(".header")?.getBoundingClientRect().height ?? 64;
+        const measureTarget = () => {
+            const currentSection = id === "top" ? null : document.getElementById(id);
+            const availableHeight = window.innerHeight - headerHeight;
+            const sectionHeight = currentSection?.getBoundingClientRect().height ?? 0;
+            const sectionTop = (currentSection?.getBoundingClientRect().top ?? 0) + window.scrollY;
+            const heading = currentSection?.querySelector<HTMLElement>(".titleContainer");
+            const pinnedTrigger = currentSection && ScrollTrigger.getAll().find((trigger) =>
+                Boolean(trigger.vars.pin) && trigger.trigger instanceof HTMLElement && currentSection.contains(trigger.trigger)
+            );
+            const target = id === "top"
+                ? 0
+                : pinnedTrigger
+                    ? pinnedTrigger.start
+                    : sectionHeight < availableHeight - 40
+                    ? sectionTop - headerHeight - (availableHeight - sectionHeight) / 2
+                    : (heading?.getBoundingClientRect().top ?? currentSection?.getBoundingClientRect().top ?? 0) + window.scrollY - headerHeight - 28;
+            return Math.max(0, Math.round(target));
+        };
+        const boundedTarget = measureTarget();
+
         ScrollTrigger.getAll().forEach((trigger) => {
             const snapTween = trigger.getTween(true);
             if (typeof snapTween?.kill === "function") snapTween.kill();
@@ -97,12 +123,26 @@ export function SectionNavigationProvider({ children }: { children: ReactNode })
         tweenRef.current = gsap.timeline({ onComplete: finish, onInterrupt: finish })
             .to(overlay, { autoAlpha: 1, duration: 0.16, ease: "power1.in" })
             .call(() => {
-                window.scrollTo(0, boundedTarget);
+                // Route changes can finish mounting GSAP pins during the curtain
+                // transition. Re-measure after that layout settles, then align once
+                // more on the following frame before revealing the destination.
+                finishScrollEntranceAnimations();
+                ScrollTrigger.refresh();
+                window.scrollTo(0, measureTarget());
                 ScrollTrigger.update();
+                finishScrollEntranceAnimations();
+                alignmentFrameRef.current = window.requestAnimationFrame(() => {
+                    alignmentFrameRef.current = null;
+                    finishScrollEntranceAnimations();
+                    ScrollTrigger.refresh();
+                    window.scrollTo(0, measureTarget());
+                    ScrollTrigger.update();
+                    finishScrollEntranceAnimations();
+                });
             })
             .to(overlay, { autoAlpha: 0, duration: 0.28, ease: "power2.out" });
         return true;
-    }, []);
+    }, [finishScrollEntranceAnimations]);
 
     const navigateSection = useCallback((event: MouseEvent<HTMLAnchorElement>, link: string) => {
         if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -153,6 +193,7 @@ export function SectionNavigationProvider({ children }: { children: ReactNode })
 
     useEffect(() => () => {
         tweenRef.current?.kill();
+        if (alignmentFrameRef.current !== null) window.cancelAnimationFrame(alignmentFrameRef.current);
         overlayRef.current?.remove();
         sectionNavigation.active = false;
     }, []);

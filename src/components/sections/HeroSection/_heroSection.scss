@@ -92,6 +92,19 @@
         object-fit: contain;
     }
 
+    .heroRevealLine {
+        position: absolute;
+        inset: -15% auto -15% 0;
+        z-index: 1;
+        width: 36%;
+        transform: skewX(-16deg);
+        background: linear-gradient(90deg, transparent, rgba($color-accent-rgb, .06) 30%, rgba($color-accent-rgb, .32) 86%, transparent);
+        filter: blur(8px);
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+    }
+
     .heroFeaturedImage {
         opacity: 0;
         visibility: hidden;

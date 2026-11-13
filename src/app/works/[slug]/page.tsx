@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProjectGallery from "@/components/project/ProjectGallery/ProjectGallery";
 import { getProjectBySlug } from "@/actions/project/getProjectBySlug";
+import { getAdjacentProjects } from "@/actions/project/getAdjacentProjects";
 import { getSiteUrl } from "@/lib/utils";
 import './_workPage.scss';
 
@@ -58,9 +59,11 @@ export default async function WorkPage({ params, searchParams }: Props) {
         notFound()
     }
 
+    const adjacentProjects = await getAdjacentProjects(slug);
+
     return (
         <div className="workPage">
-            <ProjectGallery project={project} selectedClientParam={selectedClientParam} selectedPageParam={selectedPageParam} />
+            <ProjectGallery project={project} adjacentProjects={adjacentProjects} selectedClientParam={selectedClientParam} selectedPageParam={selectedPageParam} />
         </div>
     );
 }

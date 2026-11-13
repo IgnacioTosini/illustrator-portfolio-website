@@ -1,21 +1,38 @@
 @use '../../../styles/variables' as *;
 
 .projectsContainer {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(1rem, 2.2vw, 1.75rem);
     width: 100%;
     max-width: 1180px;
     margin-inline: auto;
-    align-items: stretch;
+
+    > .projectCardMotionItem.is-featured {
+        width: 100%;
+        margin-bottom: clamp(1rem, 2.2vw, 1.75rem);
+    }
 
     > .projectCard.is-featured {
-        grid-column: 1 / -1;
+        margin-bottom: clamp(1rem, 2.2vw, 1.75rem);
+    }
+
+    .projectsMasonry {
+        columns: 2;
+        column-gap: clamp(1rem, 2.2vw, 1.75rem);
+
+        > .projectCardMotionItem {
+            width: 100%;
+            margin-bottom: clamp(1rem, 2.2vw, 1.75rem);
+            break-inside: avoid;
+        }
+
+        > .projectCard {
+            width: 100%;
+            margin-bottom: clamp(1rem, 2.2vw, 1.75rem);
+            break-inside: avoid;
+        }
     }
 
     .emptyProjects {
         width: 100%;
-        grid-column: 1 / -1;
         text-align: center;
         color: $color-text-secondary;
         font-size: $font-size-medium;
@@ -40,6 +57,6 @@
 
 @media (max-width: 640px) {
     .projectsContainer {
-        grid-template-columns: 1fr;
+        .projectsMasonry { columns: 1; }
     }
 }

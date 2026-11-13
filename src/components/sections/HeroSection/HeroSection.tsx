@@ -56,6 +56,7 @@ export default function HeroSection({ homeContent, featuredProject, preview = fa
             sizes="(max-width: 768px) 86vw, 550px"
             className="heroPortraitImage"
           />
+          <span className="heroRevealLine" aria-hidden="true" />
           {featuredProject?.images[0]?.url && (
             <Image
               src={featuredProject.images[0].url}

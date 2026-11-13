@@ -70,6 +70,61 @@
         }
     }
 
+    .contactSubmitButton {
+        transition: background-color .25s ease, color .25s ease, border-color .25s ease, transform .25s ease;
+
+        &:active:not(:disabled) { transform: translateY(1px); }
+    }
+
+    &.is-success .contactSubmitButton {
+        background-color: $color-success;
+        border-color: $color-success;
+        color: #fff;
+    }
+
+    &.is-error .contactSubmitButton { border-color: $color-error; }
+
+    .contactSubmitIcon {
+        display: inline-grid;
+        place-items: center;
+        font-size: 1.1rem;
+    }
+
+    .contactSubmitSpinner {
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: contactSubmitSpin .75s linear infinite;
+    }
+
+    .contactSubmitFeedback {
+        display: flex;
+        align-items: flex-start;
+        gap: .65rem;
+        margin-top: -.9rem;
+        padding: .85rem 1rem;
+        border: 1px solid rgba($border-color-rgb, .2);
+        border-radius: .75rem;
+        font-size: .9rem;
+        line-height: 1.5;
+
+        svg { flex: 0 0 auto; margin-top: .12rem; font-size: 1.1rem; }
+
+        &.is-success {
+            border-color: rgba($color-success, .3);
+            background: rgba($color-success, .08);
+            color: $color-success;
+        }
+
+        &.is-error {
+            border-color: rgba($color-error, .3);
+            background: rgba($color-error, .08);
+            color: $color-error;
+        }
+    }
+
     .error {
         font-size: 0.75rem;
         color: #d64545;
@@ -88,4 +143,13 @@
             transform: translateY(0);
         }
     }
+}
+
+@keyframes contactSubmitSpin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contactForm .contactSubmitSpinner { animation: none; }
+    .contactForm .contactSubmitButton { transition: none; }
 }

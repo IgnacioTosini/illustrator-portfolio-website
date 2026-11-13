@@ -28,12 +28,10 @@ export const animateWorkPage = (workPageElement: HTMLElement) => {
                 ".projectImage",
                 {
                     autoAlpha: 0,
-                    scale: 1.06,
                     filter: "blur(8px)",
                 },
                 {
                     autoAlpha: 1,
-                    scale: 1,
                     filter: "blur(0px)",
                     duration: 1,
                     clearProps: "filter",
@@ -94,7 +92,7 @@ export const animateWorkPage = (workPageElement: HTMLElement) => {
         });
 
         imagesTl.fromTo(
-            ".imagesList .projectCardImage",
+            ".imagesList .projectThumbnailImage",
             {
                 autoAlpha: 0,
                 y: 26,

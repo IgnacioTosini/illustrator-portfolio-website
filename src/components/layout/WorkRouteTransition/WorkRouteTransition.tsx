@@ -77,6 +77,17 @@ export function WorkRouteTransitionProvider({ children }: { children: ReactNode 
         const image = document.createElement("img");
         image.src = target.image;
         image.alt = "";
+        image.draggable = false;
+        image.onload = () => {
+            const isPortrait = image.naturalHeight > image.naturalWidth;
+            art.classList.toggle("is-portrait", isPortrait);
+            if (isPortrait) {
+                image.style.width = "auto";
+                image.style.maxWidth = "100%";
+                image.style.height = "100%";
+                image.style.objectFit = "contain";
+            }
+        };
         art.appendChild(image);
         const copy = document.createElement("div");
         copy.className = "workRoutePortalCopy";

@@ -20,6 +20,14 @@
     min-height: 2rem;
     font-size: $font-size-normal;
     color: $color-text-secondary;
+    gap: .3rem;
+}
+
+.totalProjectsCount {
+    display: inline-block;
+    color: $color-text;
+    font-weight: 650;
+    transform-origin: center;
 }
 
 .worksGalleryCue {

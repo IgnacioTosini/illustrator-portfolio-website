@@ -13,11 +13,129 @@
     height: clamp(420px, 72vh, 800px);
     overflow: hidden;
     margin-bottom: 3rem;
+    scroll-margin-top: 64px;
     background-color: rgba($color-text-rgb, 0.06);
+
+    .projectImageFrame {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+    }
 
     .projectImage {
         object-fit: contain;
         object-position: center;
+    }
+
+    .projectImageOpen {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        border: 0;
+        background: transparent;
+        cursor: zoom-in;
+
+        &:focus-visible {
+            outline: 3px solid $color-hover-secondary;
+            outline-offset: -6px;
+        }
+    }
+}
+
+.projectViewer {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    overflow: hidden;
+    background: rgba(10, 10, 13, .97);
+    color: #fff;
+
+    .projectViewerArt {
+        position: fixed;
+        overflow: hidden;
+        touch-action: pan-y;
+    }
+
+    .projectViewerImage {
+        position: absolute;
+        inset: 0;
+        cursor: zoom-in;
+        touch-action: pan-y;
+        user-select: none;
+
+        &.is-zoomed {
+            cursor: grab;
+            touch-action: none;
+
+            &:active { cursor: grabbing; }
+        }
+    }
+
+    .projectImage {
+        object-fit: contain;
+        user-select: none;
+        -webkit-user-drag: none;
+        pointer-events: none;
+    }
+
+    button {
+        position: absolute;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border: 1px solid rgba(255, 255, 255, .25);
+        border-radius: 50%;
+        background: rgba(15, 15, 18, .7);
+        color: #fff;
+        cursor: pointer;
+        font-size: 1.3rem;
+
+        &:hover, &:focus-visible {
+            background: rgba(255, 255, 255, .18);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 3px;
+        }
+    }
+
+    .projectViewerClose {
+        top: max(1rem, env(safe-area-inset-top));
+        right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .projectViewerZoom {
+        top: max(1rem, env(safe-area-inset-top));
+        right: calc(max(1rem, env(safe-area-inset-right)) + 54px);
+    }
+
+    .projectViewerPrevious, .projectViewerNext {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .projectViewerPrevious { left: max(1rem, env(safe-area-inset-left)); }
+    .projectViewerNext { right: max(1rem, env(safe-area-inset-right)); }
+
+    .projectViewerCount {
+        position: absolute;
+        bottom: max(1rem, env(safe-area-inset-bottom));
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: .8rem;
+        letter-spacing: .12em;
+    }
+
+    @media (max-width: 600px) {
+        .projectViewerPrevious, .projectViewerNext {
+            top: auto;
+            bottom: max(1rem, env(safe-area-inset-bottom));
+            transform: none;
+        }
     }
 }
 
@@ -135,21 +253,110 @@
             width: 100%;
             max-width: 400px;
             height: 300px;
-            object-fit: cover;
+            padding: 0;
+            overflow: hidden;
             cursor: pointer;
             border: 1px solid transparent;
-            transition: transform .25s ease, border-color .25s ease, opacity .25s ease;
+            background: rgba($color-text-rgb, 0.06);
+            transition: border-color .25s ease, box-shadow .25s ease;
 
             &:hover {
                 border-color: rgba($border-color-rgb, 0.6);
-                transform: translateY(-2px);
+            }
+
+            &:focus-visible {
+                outline: 2px solid $color-hover-secondary;
+                outline-offset: 3px;
             }
 
             &.active {
                 border-color: $color-hover-secondary;
-                transform: translateY(-2px);
-                opacity: 1;
+                box-shadow: 0 0 0 1px $color-hover-secondary;
             }
+
+            &.is-portrait {
+                height: auto;
+                aspect-ratio: 3 / 4;
+            }
+        }
+
+        .projectThumbnailFrame {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .projectThumbnailImage {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .projectCardImage.is-portrait .projectThumbnailImage {
+            object-fit: contain;
+        }
+    }
+
+    .projectAdjacent {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin: 3rem 0 5rem;
+    }
+
+    .projectAdjacentLink {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 300px;
+        overflow: hidden;
+        border: 1px solid rgba($border-color-rgb, .2);
+        border-radius: 1rem;
+        background: rgba($color-text-rgb, .04);
+        color: $color-text;
+        text-decoration: none;
+
+        &:focus-visible {
+            outline: 2px solid $color-hover-secondary;
+            outline-offset: 3px;
+        }
+
+        &:hover .projectAdjacentCopy strong {
+            color: $color-accent;
+        }
+    }
+
+    .projectAdjacentArt {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 210px;
+        overflow: hidden;
+        background: rgba($color-text-rgb, .06);
+
+        img { object-fit: contain; }
+    }
+
+    .projectAdjacentCopy {
+        display: flex;
+        flex-direction: column;
+        gap: .55rem;
+        padding: 1.25rem;
+
+        small {
+            color: $color-text-secondary;
+            font-size: $font-size-small;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+        strong {
+            font-family: "DM Serif Display", Georgia, serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 400;
+            line-height: 1.05;
+            transition: color .25s ease;
         }
     }
 }
@@ -184,7 +391,16 @@
                 height: auto;
                 aspect-ratio: 4 / 3;
                 scroll-snap-align: center;
+
+                &.is-portrait {
+                    aspect-ratio: 3 / 4;
+                }
             }
+        }
+
+        .projectAdjacent {
+            grid-template-columns: 1fr;
+            margin: 2rem 0 3rem;
         }
     }
 }
